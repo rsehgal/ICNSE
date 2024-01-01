@@ -21,6 +21,7 @@
 #include "G4UnitsTable.hh"
 #include "G4SDManager.hh"
 #include "SD.h"
+#include "Geometry.h"
 DetectorConstruction::DetectorConstruction(){
 
 }
@@ -61,7 +62,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct(){
  
 
   //Lets try to build material from NIST database
-  G4Box *leadBlock = new G4Box("LeadBlock",5.*cm,5.*cm,10.*cm);
+  /*G4Box *leadBlock = new G4Box("LeadBlock",5.*cm,5.*cm,10.*cm);
   G4Material *Pb=nist->FindOrBuildMaterial("G4_Pb");
   G4LogicalVolume *logicalLeadBlock = new G4LogicalVolume(leadBlock,Pb,"LogicalLeadBlock");
   SD* mySD = new SD("MySensitiveDetector", "MyBlockHitsCollection");
@@ -77,7 +78,30 @@ G4VPhysicalVolume* DetectorConstruction::Construct(){
                             false,
                             0,
                             checkOverlaps);
-
+*/
+G4LogicalVolume *logicalLeadBlock = (new CylindricalShell("TestShell",2,3,4,0,2*M_PI))->GetLogicalVolume();
+G4VPhysicalVolume *phyLeadBlock = new G4PVPlacement(0,
+                            //G4ThreeVector(),
+                            G4ThreeVector(),
+                            logicalLeadBlock,
+                            "Physical_Pb_Block",
+                            logicWorld,
+                            false,
+                            0,
+                            checkOverlaps);
+G4LogicalVolume *logicalLeadBlock2 = (new CylindricalShell("InnerShell",1,2,3,0,2*M_PI))->GetLogicalVolume();
+std::cout <<"---------------- RAMAN ----------------------" << std::endl;
+std::cout <<"MATERIAL : " << logicalLeadBlock2->GetMaterial()->GetName() << std::endl;
+std::cout <<"---------------------------------------------" << std::endl;
+G4VPhysicalVolume *phyLeadBlock2 = new G4PVPlacement(0,
+                            //G4ThreeVector(),
+                            G4ThreeVector(),
+                            logicalLeadBlock2,
+                            "Physical_Pb_Block",
+                            logicWorld,
+                            false,
+                            0,
+                            checkOverlaps);
 
 
 	return physWorld;
