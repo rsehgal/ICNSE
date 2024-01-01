@@ -39,7 +39,8 @@ void GeometryProperties::DefineCommands() {
                                     "Set the material of your geometry");
   fGeometryMessenger->DeclareMethod("setInnerRadius", &GeometryProperties::SetInnerRadius,
                                     "Set the Inner Radius of Cylindrical Shell");
-
+  fGeometryMessenger->DeclareMethod("setOuterRadius", &GeometryProperties::SetOuterRadius,
+                                    "Set the Outer Radius of Cylindrical Shell");
 }
 void GeometryProperties::SetProperties(G4String material, G4VSolid *solid) {
 
@@ -77,16 +78,30 @@ void GeometryProperties::SetInnerRadius(G4String logicalVolumeName, double inner
     std::cout << "++++++++++++++++++++++++++++++++++++++++" << std::endl;
     std::cout << vecOfLogicalVolumes[i]->GetName() << std::endl;
     // if (fLogicalVolume->GetName() == logicalVolumeName)
-    if (vecOfLogicalVolumes[i]->GetName() == logicalVolumeName){
-      G4Tubs *tubs = dynamic_cast<G4Tubs*>(vecOfLogicalVolumes[i]->GetSolid());//->SetInnerRadius(innerRad);
-	tubs->SetInnerRadius(innerRad);
-    //std::cout << "After material change : " << vecOfLogicalVolumes[i]->GetMaterial()->GetName() << std::endl;
-    //std::cout << "--------------------------------------" << std::endl;
-}
+    if (vecOfLogicalVolumes[i]->GetName() == logicalVolumeName) {
+      G4Tubs *tubs = dynamic_cast<G4Tubs *>(vecOfLogicalVolumes[i]->GetSolid()); //->SetInnerRadius(innerRad);
+      tubs->SetInnerRadius(innerRad);
+      // std::cout << "After material change : " << vecOfLogicalVolumes[i]->GetMaterial()->GetName() << std::endl;
+      // std::cout << "--------------------------------------" << std::endl;
+    }
   }
   G4RunManager::GetRunManager()->GeometryHasBeenModified();
 }
 
+void GeometryProperties::SetOuterRadius(G4String logicalVolumeName, double outerRad) {
+  for (unsigned int i = 0; i < vecOfLogicalVolumes.size(); i++) {
+
+    std::cout << "++++++++++++++++++++++++++++++++++++++++" << std::endl;
+    std::cout << vecOfLogicalVolumes[i]->GetName() << std::endl;
+    // if (fLogicalVolume->GetName() == logicalVolumeName)
+    if (vecOfLogicalVolumes[i]->GetName() == logicalVolumeName) {
+      G4Tubs *tubs = dynamic_cast<G4Tubs *>(vecOfLogicalVolumes[i]->GetSolid()); //->SetInnerRadius(innerRad);
+      tubs->SetOuterRadius(outerRad);
+      // std::cout << "--------------------------------------" << std::endl;
+    }
+  }
+  G4RunManager::GetRunManager()->GeometryHasBeenModified();
+}
 
 void GeometryProperties::SetMaterial(G4String logicalVolumeName, G4String material) {
   G4NistManager *nist = G4NistManager::Instance();

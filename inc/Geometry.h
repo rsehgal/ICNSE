@@ -31,6 +31,7 @@ public:
   //void SetMaterial(G4Material *material);
   void SetMaterial(G4String logicalVolumeName,G4String material);
   void SetInnerRadius(G4String logicalVolumeName,double innerRad);
+  void SetOuterRadius(G4String logicalVolumeName,double outerRad);
   //void SetInnerRadius(double innerRad);
   G4Material *GetMaterial() const;
   G4LogicalVolume *GetLogicalVolume() const;
