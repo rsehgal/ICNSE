@@ -13,6 +13,11 @@ else()
     message(STATUS "The compiler ${CMAKE_CXX_COMPILER} has no C++11 support. Please use a different C++ compiler.")
 endif()
 
+option(CYLINDRICAL_SHIELD "Enabling CYLINDRICAL shape shielding layers, Default is Cuboidal" OFF)
+if(CYLINDRICAL_SHIELD)
+add_definitions(-DCYLINDRICAL_SHIELD)
+endif(CYLINDRICAL_SHIELD)
+
 #----------------------------------------------------------------------------
 # Find Geant4 package, activating all available UI and Vis drivers by default
 # You can set WITH_GEANT4_UIVIS to OFF via the command line or ccmake/cmake-gui
@@ -26,8 +31,6 @@ else()
 endif()
 
 #----------------------------------------------------------------------------
-
-
 file(GLOB MAC_FILES ${PROJECT_SOURCE_DIR}/MacFiles/*)
 message(STATUS ${MAC_FILES})
 #file(COPY ${MAC_FILES} DESTINATION ${PROJECT_SOURCE_DIR}/build)
