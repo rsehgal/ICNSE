@@ -24,3 +24,8 @@ Box::Box(G4String name, double halfx, double halfy, double halfz,G4String materi
   fSolid = new G4Box(name, halfx, halfy, halfz);
   SetProperties(material, fSolid);
 }
+
+Box::Box(G4String name, double halfx, double halfy, double halfz,G4Material *material){
+  fSolid = new G4Box(name, halfx, halfy, halfz);
+  SetProperties(material, fSolid);
+}

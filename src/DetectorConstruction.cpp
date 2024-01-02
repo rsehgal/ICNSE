@@ -23,6 +23,7 @@
 #include "SD.h"
 #include "Geometry.h"
 #include <G4SDManager.hh>
+#include "Materials.h"
 
 DetectorConstruction::DetectorConstruction(){
 fSDMan = G4SDManager::GetSDMpointer();
@@ -50,6 +51,10 @@ G4VPhysicalVolume* DetectorConstruction::Construct(){
                       0,                     //copy number
                       checkOverlaps);        //overlaps checking
 double sheildingZ = 50*cm;
+
+Materials *matObj = new Materials;
+
+#ifdef CYLINDRICAL_SHIELD
 G4LogicalVolume *logicalShell0 = (new CylindricalShell("Shell0",25*cm,35*cm,sheildingZ,0,2*M_PI))->GetLogicalVolume();
 //G4VPhysicalVolume *phyLeadBlock = 
                           new G4PVPlacement(0,
@@ -62,7 +67,8 @@ G4LogicalVolume *logicalShell0 = (new CylindricalShell("Shell0",25*cm,35*cm,shei
                             0,
                             checkOverlaps);
 
-G4LogicalVolume *logicalShell1 = (new CylindricalShell("Shell1",35*cm,45*cm,sheildingZ,0,2*M_PI))->GetLogicalVolume();
+G4Material *bp = matObj->GetBP();
+G4LogicalVolume *logicalShell1 = (new CylindricalShell("Shell1",35*cm,45*cm,sheildingZ,0,2*M_PI,bp))->GetLogicalVolume();
 //G4VPhysicalVolume *phyLeadBlock = 
                           new G4PVPlacement(0,
                             //G4ThreeVector(),
@@ -85,6 +91,68 @@ G4LogicalVolume *logicalHollowSpace = (new CylindricalShell("HollowSpace",0*cm,2
                             false,
                             0,
                             checkOverlaps);
+
+  //Layer of HDPE
+  G4Material *hdpe = matObj->GetHDPE();
+G4LogicalVolume *logicalShell2 = (new CylindricalShell("Shell2",45*cm,55*cm,sheildingZ,0,2*M_PI,hdpe))->GetLogicalVolume();
+//G4VPhysicalVolume *phyLeadBlock = 
+                          new G4PVPlacement(0,
+                            //G4ThreeVector(),
+                            G4ThreeVector(),
+                            logicalShell2,
+                            "Shell1_Physical",
+                            logicalWorld,
+                            false,
+                            0,
+                            checkOverlaps);
+
+  #else
+G4LogicalVolume *logicalShell0 = (new BoxShell("Shell0",35*cm,35*cm,35*cm,10*cm))->GetLogicalVolume();
+//G4VPhysicalVolume *phyLeadBlock = 
+                          new G4PVPlacement(0,
+                            //G4ThreeVector(),
+                            G4ThreeVector(),
+                            logicalShell0,
+                            "Shell0_Physical",
+                            logicalWorld,
+                            false,
+                            0,
+                            checkOverlaps);
+  
+  G4LogicalVolume *logicalShell1 = (new BoxShell("Shell1",45*cm,45*cm,45*cm,10*cm))->GetLogicalVolume();
+//G4VPhysicalVolume *phyLeadBlock = 
+                          new G4PVPlacement(0,
+                            //G4ThreeVector(),
+                            G4ThreeVector(),
+                            logicalShell1,
+                            "Shell1_Physical",
+                            logicalWorld,
+                            false,
+                            0,
+                            checkOverlaps);
+
+   G4Material *hdpe = matObj->GetHDPE();                          
+   G4LogicalVolume *logicalShell2 = (new BoxShell("Shell2",55*cm,55*cm,55*cm,10*cm,hdpe))->GetLogicalVolume();
+//G4VPhysicalVolume *phyLeadBlock = 
+                          new G4PVPlacement(0,
+                            //G4ThreeVector(),
+                            G4ThreeVector(),
+                            logicalShell2,
+                            "Shell2_Physical",
+                            logicalWorld,
+                            false,
+                            0,
+                            checkOverlaps);
+  G4LogicalVolume *logicalHollowSpace = (new Box("HollowSpace",25*cm,25*cm,25*cm))->GetLogicalVolume();
+                          new G4PVPlacement(0,
+                            G4ThreeVector(),
+                            logicalHollowSpace,
+                            "HollowSpace_Physical",
+                            logicalWorld,
+                            false,
+                            0,
+                            checkOverlaps);
+  #endif
 
   SD *hollowSD = new SD("SensitiveHollowSpace");
   fSDMan->AddNewDetector(hollowSD);

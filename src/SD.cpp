@@ -25,7 +25,7 @@ SD::SD(const G4String &name) : G4VSensitiveDetector(name) {
 
 }
 
-void SD::Initialize(G4HCofThisEvent *hce) { numOfParticlesReached++; }
+void SD::Initialize(G4HCofThisEvent *hce) {  }
 
 G4bool SD::ProcessHits(G4Step *aStep, G4TouchableHistory *) {
 
@@ -36,6 +36,7 @@ G4bool SD::ProcessHits(G4Step *aStep, G4TouchableHistory *) {
     G4TouchableHandle touchable = aStep->GetPreStepPoint()->GetTouchableHandle();
     G4String particleName = track->GetDefinition()->GetParticleName();
     std::cout << "RAMAN Particle Reached : " << particleName << std::endl;
+    numOfParticlesReached++;
     track->SetTrackStatus(fStopAndKill);
   }
 

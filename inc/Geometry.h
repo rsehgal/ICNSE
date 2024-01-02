@@ -29,6 +29,7 @@ public:
   GeometryProperties(G4Material *material, G4VSolid *solid);
   GeometryProperties(G4String material, G4VSolid *solid);
   void SetProperties(G4String material, G4VSolid *solid);
+  void SetProperties(G4Material *material, G4VSolid *solid);
   ~GeometryProperties();
   //void SetMaterial(G4Material *material);
   void SetMaterial(G4String logicalVolumeName,G4String material);
@@ -47,6 +48,7 @@ public:
 public:
   CylindricalShell();
   CylindricalShell(G4String name, double rmin, double rmax, double dz, double sphi, double dphi,G4String material=G4String("G4_Galactic"));
+  CylindricalShell(G4String name, double rmin, double rmax, double dz, double sphi, double dphi,G4Material *material);
   ~CylindricalShell();
 };
 
@@ -57,7 +59,19 @@ public:
 public:
   Box();
   Box(G4String name,  double halfx, double halfy, double halfz,G4String material=G4String("G4_Galactic"));
+  Box(G4String name,  double halfx, double halfy, double halfz,G4Material *material);
   ~Box();
+};
+
+class BoxShell : public GeometryProperties {
+public:
+  G4VSolid *fSolid;
+
+public:
+  BoxShell();
+  BoxShell(G4String name,  double halfx, double halfy, double halfz, double thickness, G4String material=G4String("G4_Galactic"));
+  BoxShell(G4String name,  double halfx, double halfy, double halfz, double thickness,G4Material *material);
+  ~BoxShell();
 };
 
 
