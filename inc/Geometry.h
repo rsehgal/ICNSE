@@ -7,11 +7,13 @@
 #define Geometry_h
 
 class G4Tubs;
+class G4Box;
 class G4LogicalVolume;
 class G4Material;
 class G4VSolid;
 class G4Tubs;
-class G4String;
+#include <G4String.hh>
+//class G4String;
 //class DetectorMessenger;
 class G4GenericMessenger;
 
@@ -44,8 +46,20 @@ public:
 
 public:
   CylindricalShell();
-  CylindricalShell(G4String name, double rmin, double rmax, double dz, double sphi, double dphi);
+  CylindricalShell(G4String name, double rmin, double rmax, double dz, double sphi, double dphi,G4String material=G4String("G4_Galactic"));
   ~CylindricalShell();
 };
+
+class Box : public GeometryProperties {
+public:
+  G4Box *fSolid;
+
+public:
+  Box();
+  Box(G4String name,  double halfx, double halfy, double halfz,G4String material=G4String("G4_Galactic"));
+  ~Box();
+};
+
+
 
 #endif

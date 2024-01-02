@@ -17,8 +17,7 @@ class SD : public G4VSensitiveDetector {
 
 public:
 	//SD();
-	SD(const G4String& name,
-	                const G4String& hitsCollectionName);
+	SD(const G4String& name);
 	virtual ~SD();
 
 	// methods from base class

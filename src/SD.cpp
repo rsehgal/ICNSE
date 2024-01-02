@@ -21,8 +21,8 @@ SD::~SD() {
   // TODO Auto-generated destructor stub
 }
 
-SD::SD(const G4String &name, const G4String &hitsCollectionName) : G4VSensitiveDetector(name) {
-  collectionName.insert(hitsCollectionName);
+SD::SD(const G4String &name) : G4VSensitiveDetector(name) {
+
 }
 
 void SD::Initialize(G4HCofThisEvent *hce) { numOfParticlesReached++; }
@@ -35,11 +35,14 @@ G4bool SD::ProcessHits(G4Step *aStep, G4TouchableHistory *) {
   if (isPrimary) {
     G4TouchableHandle touchable = aStep->GetPreStepPoint()->GetTouchableHandle();
     G4String particleName = track->GetDefinition()->GetParticleName();
+    std::cout << "RAMAN Particle Reached : " << particleName << std::endl;
+    track->SetTrackStatus(fStopAndKill);
   }
 
-  bool isSecondary = (track->GetParentID() == 1);
+  /*bool isSecondary = (track->GetParentID() == 1);
   G4String particleName = track->GetDefinition()->GetParticleName();
   const G4VProcess *creatorProcess = track->GetCreatorProcess();
+  */
   return true;
 }
 

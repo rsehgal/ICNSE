@@ -133,7 +133,7 @@ CylindricalShell::CylindricalShell() {}
 
 CylindricalShell::~CylindricalShell() {}
 
-CylindricalShell::CylindricalShell(G4String name, double rmin, double rmax, double dz, double sphi, double dphi) {
+CylindricalShell::CylindricalShell(G4String name, double rmin, double rmax, double dz, double sphi, double dphi, G4String material) {
   fSolid = new G4Tubs(name, rmin, rmax, dz, sphi, dphi);
   SetProperties("G4_Al", fSolid);
   // GeometryProperties("G4_Al", fSolid);

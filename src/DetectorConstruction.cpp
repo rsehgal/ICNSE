@@ -22,87 +22,73 @@
 #include "G4SDManager.hh"
 #include "SD.h"
 #include "Geometry.h"
-DetectorConstruction::DetectorConstruction(){
+#include <G4SDManager.hh>
 
+DetectorConstruction::DetectorConstruction(){
+fSDMan = G4SDManager::GetSDMpointer();
 }
 
 DetectorConstruction::~DetectorConstruction(){}
 
 G4VPhysicalVolume* DetectorConstruction::Construct(){
   
-  G4NistManager* nist = G4NistManager::Instance();
-  G4bool checkOverlaps = true;
-
-  
+  // G4NistManager* nist = G4NistManager::Instance();
   //     
   // World
   //
+  G4bool checkOverlaps = true;
   G4double world_sizeXYZ = 200*cm;
-  G4Material* world_mat = nist->FindOrBuildMaterial("G4_AIR");
-
-  G4Box* solidWorld =    
-    new G4Box("World",                       //its name
-       0.5*world_sizeXYZ, 0.5*world_sizeXYZ, 0.5*world_sizeXYZ);     //its size
-      
-  G4LogicalVolume* logicWorld =                         
-    new G4LogicalVolume(solidWorld,          //its solid
-                        world_mat,           //its material
-                        "World");            //its name
-                                   
+  G4LogicalVolume *logicalWorld = (new Box("World",0.5*world_sizeXYZ, 0.5*world_sizeXYZ, 0.5*world_sizeXYZ)
+  )->GetLogicalVolume();
   G4VPhysicalVolume* physWorld = 
     new G4PVPlacement(0,                     //no rotation
                       G4ThreeVector(),       //at (0,0,0)
-                      logicWorld,            //its logical volume
+                      logicalWorld,            //its logical volume
                       "PhysicalWorld",               //its name
                       0,                     //its mother  volume
                       false,                 //no boolean operation
                       0,                     //copy number
                       checkOverlaps);        //overlaps checking
-
- 
-
-  //Lets try to build material from NIST database
-  /*G4Box *leadBlock = new G4Box("LeadBlock",5.*cm,5.*cm,10.*cm);
-  G4Material *Pb=nist->FindOrBuildMaterial("G4_Pb");
-  G4LogicalVolume *logicalLeadBlock = new G4LogicalVolume(leadBlock,Pb,"LogicalLeadBlock");
-  SD* mySD = new SD("MySensitiveDetector", "MyBlockHitsCollection");
-  G4SDManager *sdman = G4SDManager::GetSDMpointer();
-  sdman->AddNewDetector(mySD);
-  logicalLeadBlock->SetSensitiveDetector(mySD);
-  G4VPhysicalVolume *phyLeadBlock = new G4PVPlacement(0,
+double sheildingZ = 50*cm;
+G4LogicalVolume *logicalShell0 = (new CylindricalShell("Shell0",25*cm,35*cm,sheildingZ,0,2*M_PI))->GetLogicalVolume();
+//G4VPhysicalVolume *phyLeadBlock = 
+                          new G4PVPlacement(0,
                             //G4ThreeVector(),
                             G4ThreeVector(),
-                            logicalLeadBlock,
-                            "Physical_Pb_Block",
-                            logicWorld,
-                            false,
-                            0,
-                            checkOverlaps);
-*/
-G4LogicalVolume *logicalLeadBlock = (new CylindricalShell("TestShell",2,3,4,0,2*M_PI))->GetLogicalVolume();
-G4VPhysicalVolume *phyLeadBlock = new G4PVPlacement(0,
-                            //G4ThreeVector(),
-                            G4ThreeVector(),
-                            logicalLeadBlock,
-                            "Physical_Pb_Block",
-                            logicWorld,
-                            false,
-                            0,
-                            checkOverlaps);
-G4LogicalVolume *logicalLeadBlock2 = (new CylindricalShell("InnerShell",1,2,3,0,2*M_PI))->GetLogicalVolume();
-std::cout <<"---------------- RAMAN ----------------------" << std::endl;
-std::cout <<"MATERIAL : " << logicalLeadBlock2->GetMaterial()->GetName() << std::endl;
-std::cout <<"---------------------------------------------" << std::endl;
-G4VPhysicalVolume *phyLeadBlock2 = new G4PVPlacement(0,
-                            //G4ThreeVector(),
-                            G4ThreeVector(),
-                            logicalLeadBlock2,
-                            "Physical_Pb_Block",
-                            logicWorld,
+                            logicalShell0,
+                            "Shell0_Physical",
+                            logicalWorld,
                             false,
                             0,
                             checkOverlaps);
 
+G4LogicalVolume *logicalShell1 = (new CylindricalShell("Shell1",35*cm,45*cm,sheildingZ,0,2*M_PI))->GetLogicalVolume();
+//G4VPhysicalVolume *phyLeadBlock = 
+                          new G4PVPlacement(0,
+                            //G4ThreeVector(),
+                            G4ThreeVector(),
+                            logicalShell1,
+                            "Shell1_Physical",
+                            logicalWorld,
+                            false,
+                            0,
+                            checkOverlaps);
+
+G4LogicalVolume *logicalHollowSpace = (new CylindricalShell("HollowSpace",0*cm,25*cm,sheildingZ,0,2*M_PI))->GetLogicalVolume();
+//G4VPhysicalVolume *phyLeadBlock = 
+                          new G4PVPlacement(0,
+                            //G4ThreeVector(),
+                            G4ThreeVector(),
+                            logicalHollowSpace,
+                            "HollowSpace_Physical",
+                            logicalWorld,
+                            false,
+                            0,
+                            checkOverlaps);
+
+  SD *hollowSD = new SD("SensitiveHollowSpace");
+  fSDMan->AddNewDetector(hollowSD);
+  logicalHollowSpace->SetSensitiveDetector(hollowSD);
 
 	return physWorld;
 
