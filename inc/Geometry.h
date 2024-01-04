@@ -33,9 +33,17 @@ public:
   ~GeometryProperties();
   //void SetMaterial(G4Material *material);
   void SetMaterial(G4String logicalVolumeName,G4String material);
-
+  
+  // Function to change the inner and outer radius of tube
   void SetInnerRadius(G4String logicalVolumeName,double innerRad);
   void SetOuterRadius(G4String logicalVolumeName,double outerRad);
+
+   // Function to create geometry from UI
+   /*void CreateBox(G4String name, double halfx, double halfy, double halfz,
+                  G4String material,G4Rotation *rot, G4ThreeVector trans,
+                  G4LogicalVolume *)
+    */              
+
   //void SetInnerRadius(double innerRad);
   G4Material *GetMaterial() const;
   G4LogicalVolume *GetLogicalVolume() const;

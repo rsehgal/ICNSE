@@ -47,7 +47,8 @@ void GeometryProperties::DefineCommands() {
 }
 void GeometryProperties::SetProperties(G4String material, G4VSolid *solid) {
 
-  G4NistManager *nist = G4NistManager::Instance();
+  //G4NistManager *nist = G4NistManager::Instance();
+  Materials *nist = Materials::Instance();
   G4Material *solid_material = nist->FindOrBuildMaterial(material);
   fLogicalVolume = new G4LogicalVolume(solid, solid_material, solid->GetName() + "_Logical");
   vecOfLogicalVolumes.push_back(fLogicalVolume);
