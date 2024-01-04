@@ -15,6 +15,9 @@
 #include <G4GenericMessenger.hh>
 #include <G4RunManager.hh>
 #include <vector>
+#include <G4LogicalSkinSurface.hh>
+#include <G4SurfaceProperty.hh>
+#include "Materials.h"
 
 std::vector<G4LogicalVolume *> vecOfLogicalVolumes;
 
@@ -55,29 +58,10 @@ void GeometryProperties::SetProperties(G4Material *material, G4VSolid *solid) {
 
   fLogicalVolume = new G4LogicalVolume(solid, material, solid->GetName() + "_Logical");
   vecOfLogicalVolumes.push_back(fLogicalVolume);
-  DefineCommands();
+  //DefineCommands();
 }
 
 GeometryProperties::~GeometryProperties() {}
-
-// void GeometryProperties::SetMaterial(G4Material *material) { fMaterial = material; }
-/*void GeometryProperties::SetMaterial(G4String material) {
-  G4NistManager *nist = G4NistManager::Instance();
-  G4Material *solid_material = nist->FindOrBuildMaterial(material);
-  if (solid_material)
-    fMaterial = solid_material;
-  else
-    std::cout << "Material Not found : " << std::endl;
-
-  fLogicalVolume->SetMaterial(fMaterial);
-  G4RunManager::GetRunManager()->GeometryHasBeenModified();
-  std::cout << "After material change : " << fLogicalVolume->GetMaterial()->GetName() << std::endl;
-}
-*/
-
-/*void GeometryProperties::SetInnerRadius(double innerRad){
-fSolid->SetInnerRadius(innerRad);
-}*/
 
 void GeometryProperties::SetInnerRadius(G4String logicalVolumeName, double innerRad) {
   for (unsigned int i = 0; i < vecOfLogicalVolumes.size(); i++) {
@@ -111,7 +95,8 @@ void GeometryProperties::SetOuterRadius(G4String logicalVolumeName, double outer
 }
 
 void GeometryProperties::SetMaterial(G4String logicalVolumeName, G4String material) {
-  G4NistManager *nist = G4NistManager::Instance();
+  //G4NistManager *nist = G4NistManager::Instance();
+  Materials *nist = Materials::Instance();
   G4Material *solid_material = nist->FindOrBuildMaterial(material);
   if (solid_material)
     fMaterial = solid_material;
@@ -125,6 +110,14 @@ void GeometryProperties::SetMaterial(G4String logicalVolumeName, G4String materi
     // if (fLogicalVolume->GetName() == logicalVolumeName)
     if (vecOfLogicalVolumes[i]->GetName() == logicalVolumeName)
       vecOfLogicalVolumes[i]->SetMaterial(fMaterial);
+
+      #ifdef ENABLE_OPTICAL_PHYSICS
+        //std::cout << "Adding Reflective surfaces" << std::endl;
+        G4SurfaceProperty *opticalMirror = Materials::Instance()->GetMirror("opticalMirror");
+        //G4LogicalSkinSurface *skin1 = 
+        const G4String skinName = logicalVolumeName+"_OpticalSkin";
+        new G4LogicalSkinSurface(skinName, vecOfLogicalVolumes[i], opticalMirror);
+      #endif
     std::cout << "After material change : " << vecOfLogicalVolumes[i]->GetMaterial()->GetName() << std::endl;
     std::cout << "--------------------------------------" << std::endl;
   }

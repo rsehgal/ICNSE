@@ -19,6 +19,8 @@
 
 #include "QGSP_BERT_HP.hh"
 #include <Shielding.hh>
+#include "G4OpticalPhysics.hh"
+
 
 int main(int argc,char** argv)
 {
@@ -33,6 +35,11 @@ G4RunManager *runManager = new G4RunManager;
   G4VModularPhysicsList* physicsList = new Shielding;//QGSP_BERT_HP;//QBBC;
 
   runManager->SetUserInitialization(physicsList);
+
+  #ifdef ENABLE_OPTICAL_PHYSICS
+  G4OpticalPhysics *opticalPhysics = new G4OpticalPhysics();
+  physicsList->RegisterPhysics(opticalPhysics);
+  #endif
     
   runManager->SetUserInitialization(new ActionInitialization());
 

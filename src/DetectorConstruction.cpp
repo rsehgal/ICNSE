@@ -24,6 +24,8 @@
 #include "Geometry.h"
 #include <G4SDManager.hh>
 #include "Materials.h"
+#include <G4OpticalSurface.hh>
+#include <G4LogicalSkinSurface.hh>
 
 DetectorConstruction::DetectorConstruction(){
 fSDMan = G4SDManager::GetSDMpointer();
@@ -32,7 +34,7 @@ fSDMan = G4SDManager::GetSDMpointer();
 DetectorConstruction::~DetectorConstruction(){}
 
 G4VPhysicalVolume* DetectorConstruction::Construct(){
-  
+ 
   // G4NistManager* nist = G4NistManager::Instance();
   //     
   // World
@@ -50,11 +52,9 @@ G4VPhysicalVolume* DetectorConstruction::Construct(){
                       false,                 //no boolean operation
                       0,                     //copy number
                       checkOverlaps);        //overlaps checking
-double sheildingZ = 50*cm;
-
-Materials *matObj = new Materials;
 
 #ifdef CYLINDRICAL_SHIELD
+double sheildingZ = 50*cm;
 G4LogicalVolume *logicalShell0 = (new CylindricalShell("Shell0",25*cm,35*cm,sheildingZ,0,2*M_PI))->GetLogicalVolume();
 //G4VPhysicalVolume *phyLeadBlock = 
                           new G4PVPlacement(0,
@@ -67,8 +67,7 @@ G4LogicalVolume *logicalShell0 = (new CylindricalShell("Shell0",25*cm,35*cm,shei
                             0,
                             checkOverlaps);
 
-G4Material *bp = matObj->GetBP();
-G4LogicalVolume *logicalShell1 = (new CylindricalShell("Shell1",35*cm,45*cm,sheildingZ,0,2*M_PI,bp))->GetLogicalVolume();
+G4LogicalVolume *logicalShell1 = (new CylindricalShell("Shell1",35*cm,45*cm,sheildingZ,0,2*M_PI))->GetLogicalVolume();
 //G4VPhysicalVolume *phyLeadBlock = 
                           new G4PVPlacement(0,
                             //G4ThreeVector(),
@@ -93,8 +92,8 @@ G4LogicalVolume *logicalHollowSpace = (new CylindricalShell("HollowSpace",0*cm,2
                             checkOverlaps);
 
   //Layer of HDPE
-  G4Material *hdpe = matObj->GetHDPE();
-G4LogicalVolume *logicalShell2 = (new CylindricalShell("Shell2",45*cm,55*cm,sheildingZ,0,2*M_PI,hdpe))->GetLogicalVolume();
+  
+G4LogicalVolume *logicalShell2 = (new CylindricalShell("Shell2",45*cm,55*cm,sheildingZ,0,2*M_PI))->GetLogicalVolume();
 //G4VPhysicalVolume *phyLeadBlock = 
                           new G4PVPlacement(0,
                             //G4ThreeVector(),
@@ -131,8 +130,9 @@ G4LogicalVolume *logicalShell0 = (new BoxShell("Shell0",35*cm,35*cm,35*cm,10*cm)
                             0,
                             checkOverlaps);
 
-   G4Material *hdpe = matObj->GetHDPE();                          
-   G4LogicalVolume *logicalShell2 = (new BoxShell("Shell2",55*cm,55*cm,55*cm,10*cm,hdpe))->GetLogicalVolume();
+                          
+   G4LogicalVolume *logicalShell2 = (new BoxShell("Shell2",55*cm,55*cm,55*cm,10*cm))->GetLogicalVolume();
+   
 //G4VPhysicalVolume *phyLeadBlock = 
                           new G4PVPlacement(0,
                             //G4ThreeVector(),

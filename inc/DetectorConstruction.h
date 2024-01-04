@@ -13,13 +13,16 @@ class G4VUserDetectorConstruction;
 class G4VPhysicalVolume;
 class G4LogicalVolume;
 class G4SDManager;
+class G4Material;
 
 class DetectorConstruction : public G4VUserDetectorConstruction
 {
+  //G4Material *fScintMaterial;
 public:
 	DetectorConstruction();
 	~DetectorConstruction();
 	G4VPhysicalVolume* Construct();
+  
 
 public:
 	G4SDManager *fSDMan;
