@@ -38,6 +38,12 @@ public:
   void SetInnerRadius(G4String logicalVolumeName,double innerRad);
   void SetOuterRadius(G4String logicalVolumeName,double outerRad);
 
+  // Functions to change Box dimensions
+  void SetBoxXDim(G4String logicalVolumeName,double half);
+  void SetBoxYDim(G4String logicalVolumeName,double half);
+  void SetBoxZDim(G4String logicalVolumeName,double half);
+  void SetBoxAllDim(G4String logicalVolumeName,double halfx, double halfy, double halfz);
+
    // Function to create geometry from UI
    /*void CreateBox(G4String name, double halfx, double halfy, double halfz,
                   G4String material,G4Rotation *rot, G4ThreeVector trans,
@@ -69,6 +75,7 @@ public:
   Box();
   Box(G4String name,  double halfx, double halfy, double halfz,G4String material=G4String("G4_Galactic"));
   Box(G4String name,  double halfx, double halfy, double halfz,G4Material *material);
+  
   ~Box();
 };
 

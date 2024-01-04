@@ -9,6 +9,7 @@
 #include <G4NistManager.hh>
 #include <G4String.hh>
 #include <G4Tubs.hh>
+#include <G4Box.hh>
 #include <G4VSolid.hh>
 #include <iostream>
 //#include "GeometryMessenger.h"
@@ -44,6 +45,13 @@ void GeometryProperties::DefineCommands() {
                                     "Set the Inner Radius of Cylindrical Shell");
   fGeometryMessenger->DeclareMethod("setOuterRadius", &GeometryProperties::SetOuterRadius,
                                     "Set the Outer Radius of Cylindrical Shell");
+fGeometryMessenger->DeclareMethod("setBoxXDim", &GeometryProperties::SetBoxXDim,
+                                    "Set the X Dimension of the Box");                                    
+fGeometryMessenger->DeclareMethod("setBoxYDim", &GeometryProperties::SetBoxYDim,
+                                    "Set the Y Dimension of the Box"); 
+fGeometryMessenger->DeclareMethod("setBoxZDim", &GeometryProperties::SetBoxZDim,
+                                    "Set the Z Dimension of the Box"); 
+
 }
 void GeometryProperties::SetProperties(G4String material, G4VSolid *solid) {
 
@@ -93,6 +101,51 @@ void GeometryProperties::SetOuterRadius(G4String logicalVolumeName, double outer
     }
   }
   G4RunManager::GetRunManager()->GeometryHasBeenModified();
+}
+
+void GeometryProperties::SetBoxXDim(G4String logicalVolumeName,double half){
+  for (unsigned int i = 0; i < vecOfLogicalVolumes.size(); i++) {
+  if (vecOfLogicalVolumes[i]->GetName() == logicalVolumeName) {
+      G4Box *box = dynamic_cast<G4Box *>(vecOfLogicalVolumes[i]->GetSolid()); //->SetInnerRadius(innerRad);
+      box->SetXHalfLength(half);
+      // std::cout << "--------------------------------------" << std::endl;
+    }
+  }
+    G4RunManager::GetRunManager()->GeometryHasBeenModified();
+}
+
+void GeometryProperties::SetBoxYDim(G4String logicalVolumeName,double half){
+  for (unsigned int i = 0; i < vecOfLogicalVolumes.size(); i++) {
+if (vecOfLogicalVolumes[i]->GetName() == logicalVolumeName) {
+      G4Box *box = dynamic_cast<G4Box *>(vecOfLogicalVolumes[i]->GetSolid()); //->SetInnerRadius(innerRad);
+      box->SetYHalfLength(half);
+      // std::cout << "--------------------------------------" << std::endl;
+    }
+  }
+    G4RunManager::GetRunManager()->GeometryHasBeenModified();
+}
+
+void GeometryProperties::SetBoxZDim(G4String logicalVolumeName,double half){
+  for (unsigned int i = 0; i < vecOfLogicalVolumes.size(); i++) {
+if (vecOfLogicalVolumes[i]->GetName() == logicalVolumeName) {
+      G4Box *box = dynamic_cast<G4Box *>(vecOfLogicalVolumes[i]->GetSolid()); //->SetInnerRadius(innerRad);
+      box->SetZHalfLength(half);
+      // std::cout << "--------------------------------------" << std::endl;
+    }
+  }
+    G4RunManager::GetRunManager()->GeometryHasBeenModified();
+}
+
+void GeometryProperties::SetBoxAllDim(G4String logicalVolumeName,double halfx, double halfy, double halfz){
+  for (unsigned int i = 0; i < vecOfLogicalVolumes.size(); i++) {
+if (vecOfLogicalVolumes[i]->GetName() == logicalVolumeName) {
+      G4Box *box = dynamic_cast<G4Box *>(vecOfLogicalVolumes[i]->GetSolid()); //->SetInnerRadius(innerRad);
+      box->SetXHalfLength(halfx);
+      box->SetYHalfLength(halfy);
+      box->SetZHalfLength(halfz);
+      // std::cout << "--------------------------------------" << std::endl;
+    }
+  }
 }
 
 void GeometryProperties::SetMaterial(G4String logicalVolumeName, G4String material) {
