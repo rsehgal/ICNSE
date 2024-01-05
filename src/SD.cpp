@@ -15,6 +15,7 @@
 #include "G4ios.hh"
 #include "SD.h"
 int SD::numOfParticlesReached = 0;
+int SD::numOfEventsProcessed = 0;
 
 
 SD::~SD() {
@@ -25,7 +26,7 @@ SD::SD(const G4String &name) : G4VSensitiveDetector(name) {
 
 }
 
-void SD::Initialize(G4HCofThisEvent *hce) {  }
+void SD::Initialize(G4HCofThisEvent *hce) { }
 
 G4bool SD::ProcessHits(G4Step *aStep, G4TouchableHistory *) {
 
@@ -47,4 +48,9 @@ G4bool SD::ProcessHits(G4Step *aStep, G4TouchableHistory *) {
   return true;
 }
 
-void SD::EndOfEvent(G4HCofThisEvent *) {}
+void SD::EndOfEvent(G4HCofThisEvent *) {
+  numOfEventsProcessed++;
+  if(!(numOfEventsProcessed%100000) && numOfEventsProcessed!=0){
+    std::cout << "Number of Events Processed : " << numOfEventsProcessed << std::endl;
+  }
+}

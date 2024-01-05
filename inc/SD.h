@@ -25,6 +25,7 @@ public:
 	virtual G4bool ProcessHits(G4Step* step, G4TouchableHistory* history);
 	virtual void   EndOfEvent(G4HCofThisEvent* hitCollection);
 	static int numOfParticlesReached;
+	static int numOfEventsProcessed;
 
 
 };
