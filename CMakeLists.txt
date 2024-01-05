@@ -23,6 +23,12 @@ if(ENABLE_OPTICAL_PHYSICS)
 add_definitions(-DENABLE_OPTICAL_PHYSICS)
 endif(ENABLE_OPTICAL_PHYSICS)
 
+option(TRACK_ONLY_PRIMARY "Enabling OPTICAL Physics, Default is OFF " OFF)
+if(TRACK_ONLY_PRIMARY)
+add_definitions(-DTRACK_ONLY_PRIMARY)
+endif(TRACK_ONLY_PRIMARY)
+
+
 #----------------------------------------------------------------------------
 # Find Geant4 package, activating all available UI and Vis drivers by default
 # You can set WITH_GEANT4_UIVIS to OFF via the command line or ccmake/cmake-gui

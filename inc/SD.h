@@ -9,11 +9,18 @@
 
 #include "G4VSensitiveDetector.hh"
 #include "vector"
-
+#include <map>
 class G4Step;
 class G4HCofThisEvent;
+class G4String;
 
 class SD : public G4VSensitiveDetector {
+	private:
+	//static 
+	unsigned int numOfEventsProcessed;
+
+	public:
+	static std::map<G4String,unsigned int> fParticleCounter;
 
 public:
 	//SD();
@@ -24,8 +31,9 @@ public:
 	virtual void   Initialize(G4HCofThisEvent* hitCollection);
 	virtual G4bool ProcessHits(G4Step* step, G4TouchableHistory* history);
 	virtual void   EndOfEvent(G4HCofThisEvent* hitCollection);
+	void CheckAndCountParticle(G4String particleName );
 	static int numOfParticlesReached;
-	static int numOfEventsProcessed;
+	
 
 
 };
