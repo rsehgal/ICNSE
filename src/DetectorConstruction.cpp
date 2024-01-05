@@ -85,6 +85,7 @@ G4VPhysicalVolume *DetectorConstruction::Construct() {
       (new BoxShell("OuterHDPEShell", 71 * cm, 71 * cm, 83.5 * cm, 10 * cm, "ICNSE_HDPE"))->GetLogicalVolume();
   G4LogicalVolume *logicalOuterPSShell =
       (new BoxShell("OuterPSShell", 75 * cm, 75 * cm, 87.5 * cm, 4 * cm, "ICNSE_PS"))->GetLogicalVolume();
+  
 
 #endif
   // Physical Placement
@@ -104,7 +105,7 @@ G4VPhysicalVolume *DetectorConstruction::Construct() {
                     checkOverlaps);
   new G4PVPlacement(0, G4ThreeVector(), logicalOuterPSShell, "OuterPSShell_Physical", logicalWorld, false, 0,
                     checkOverlaps);
-
+  
   SD *hollowSD = new SD("SensitiveHollowSpace");
   fSDMan->AddNewDetector(hollowSD);
   logicalHollowSpace->SetSensitiveDetector(hollowSD);

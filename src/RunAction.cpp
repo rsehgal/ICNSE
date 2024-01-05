@@ -13,6 +13,7 @@
 #include <string.h>
 //#include "B1EventAction.hh"
 #include "SD.h"
+#include "Helpers.h"
 
 using namespace std;
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -51,11 +52,7 @@ void RunAction::EndOfRunAction(const G4Run* run)
 {
   G4int nofEvents = run->GetNumberOfEvent();
   if (nofEvents == 0) return;
-
-  std::cout  << "====================================================================" << std::endl;
-  std::cout << "Total Number of Event : " << nofEvents << std::endl;
-  std::cout << "No of Particles reaches Sensitive Detector Region : " << SD::numOfParticlesReached << std::endl;  
-  std::cout  << "====================================================================" << std::endl;
+  PrintSummary(nofEvents);
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
