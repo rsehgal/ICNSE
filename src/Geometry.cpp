@@ -119,6 +119,13 @@ void GeometryProperties::SetBoxShellThickness(G4String logicalVolumeName,double 
       double newInnerHalfX = boxOuterSolid->GetXHalfLength()-thickness;
       double newInnerHalfY = boxOuterSolid->GetYHalfLength()-thickness;
       double newInnerHalfZ = boxOuterSolid->GetZHalfLength()-thickness;
+
+      std::cout << "Details of outer box  " << std::endl;
+      std::cout << boxOuterSolid->GetXHalfLength() << std::endl;  
+
+      std::cout << "Details of inner box  " << std::endl;
+      std::cout << boxInnerSolid->GetXHalfLength() << std::endl;   
+
       boxInnerSolid->SetXHalfLength(newInnerHalfX);
       boxInnerSolid->SetYHalfLength(newInnerHalfY);
       boxInnerSolid->SetZHalfLength(newInnerHalfZ);

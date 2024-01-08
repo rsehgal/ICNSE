@@ -17,6 +17,9 @@ fHalfX(halfx),fHalfY(halfy),fHalfZ(halfz),fThickness(thickness)
         G4Box* outerBox = new G4Box("OuterBox",fHalfX,fHalfY,fHalfZ);
         G4Box* innerBox = new G4Box("InnerBox",fHalfX-fThickness,fHalfY-fThickness,fHalfZ-fThickness);
         fSolid = new G4SubtractionSolid(name, outerBox, innerBox, 0, G4ThreeVector(0.,0.,0.));
+
+        //Keeping it simple, with no rotation on inner box
+        fSolid = new G4SubtractionSolid(name, outerBox, innerBox);
         SetProperties(material, fSolid);
 }
 
@@ -26,7 +29,10 @@ fHalfX(halfx),fHalfY(halfy),fHalfZ(halfz),fThickness(thickness)
 {
         G4Box* outerBox = new G4Box("OuterBox",fHalfX,fHalfY,fHalfZ);
         G4Box* innerBox = new G4Box("InnerBox",fHalfX-fThickness,fHalfY-fThickness,fHalfZ-fThickness);
-        fSolid = new G4SubtractionSolid(name, outerBox, innerBox, 0, G4ThreeVector(0.,0.,0.));
+        //fSolid = new G4SubtractionSolid(name, outerBox, innerBox, 0, G4ThreeVector(0.,0.,0.));
+        
+        //Keeping it simple, with no rotation on inner box
+        fSolid = new G4SubtractionSolid(name, outerBox, innerBox);
         SetProperties(material, fSolid);
 
 }

@@ -56,4 +56,7 @@ file(GLOB headers ${PROJECT_SOURCE_DIR}/inc/*.h ${PROJECT_SOURCE_DIR}/inc/*.hh .
 
 add_executable(main main.cpp ${sources} ${headers})
 target_link_libraries(main ${Geant4_LIBRARIES})
+
+add_executable(TestBoolean coreTest/TestBoolean.cpp)
+target_link_libraries(TestBoolean ${Geant4_LIBRARIES})
 #target_link_libraries(main ${Geant4_LIBRARIES} Tomo)
