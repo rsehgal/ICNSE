@@ -35,13 +35,17 @@ Materials::~Materials() {}
 
 void Materials::CreateBoratedPolyethylene() {
 
-  G4double density = 0.95 * g / cm3;
+  //G4double density = 0.95 * g / cm3;
+  G4double density = 1.04 * g / cm3;
   fBP = new G4Material("BoratedPolyethylene", density, 2);
   /* Define elements and materials (if not already defined)
   ** We are trying to define Borated Polyethylene with required % of Boron
   */
-  G4Element *elB = new G4Element("Boron", "B", 5, 10.811 * g / mole);
-  fBP->AddElement(elB, 0.05); // 15% Boron
+  //G4Element *elB = new G4Element("Boron", "B", 5, 10.811 * g / mole);
+  G4Material *elB = G4NistManager::Instance()->FindOrBuildMaterial("G4_B");
+  //fBP->AddElement(elB, 0.05); // 15% Boron
+  fBP->AddMaterial(elB, 0.05); // 15% Boron
+
   G4Material *polyethylene = G4NistManager::Instance()->FindOrBuildMaterial("G4_POLYETHYLENE");
   fBP->AddMaterial(polyethylene, 0.95);
 
@@ -53,8 +57,8 @@ void Materials::CreateBoratedPolyethylene() {
 }
 
 void Materials::CreateHighDensityPolyethylene() {
-  double density = 0.95 * g / cm3;
-  ;
+  //double density = 0.95 * g / cm3;
+  double density = 0.97 * g / cm3;
   G4NistManager *nistManager = G4NistManager::Instance();
   nistManager->BuildMaterialWithNewDensity("HighDensityPolyethylene", "G4_POLYETHYLENE", density);
   fHDPE = G4NistManager::Instance()->FindOrBuildMaterial("HighDensityPolyethylene");
