@@ -12,6 +12,9 @@ class G4LogicalVolume;
 class G4Material;
 class G4VSolid;
 class G4Tubs;
+class G4SubtractionSolid;
+
+#include <G4CSGSolid.hh>
 #include <G4String.hh>
 //class G4String;
 //class DetectorMessenger;
@@ -44,6 +47,11 @@ public:
   void SetBoxZDim(G4String logicalVolumeName,double half);
   void SetBoxAllDim(G4String logicalVolumeName,double halfx, double halfy, double halfz);
 
+  // Functions to change BoxShell dimension
+  void SetBoxShellXDim(G4String logicalVolumeName,double half);
+  void SetBoxShellYDim(G4String logicalVolumeName,double half);
+  void SetBoxShellZDim(G4String logicalVolumeName,double half);
+  void SetBoxShellThickness(G4String logicalVolumeName,double thickness);
    // Function to create geometry from UI
    /*void CreateBox(G4String name, double halfx, double halfy, double halfz,
                   G4String material,G4Rotation *rot, G4ThreeVector trans,
@@ -79,14 +87,33 @@ public:
   ~Box();
 };
 
-class BoxShell : public GeometryProperties {
-public:
-  G4VSolid *fSolid;
+class BoxShellVSolid{
+
+};
+
+class BoxShell : public GeometryProperties{
+//class BoxShell : public GeometryProperties,public G4CSGSolid {
+//class BoxShell : public G4VSolid {
+private:
+  double fHalfX;
+  double fHalfY;
+  double fHalfZ;
+  double fThickness;
 
 public:
-  BoxShell();
+  //G4VSolid *fSolid;
+  G4SubtractionSolid *fSolid;
+  void SetXHalfLength(double half);
+  void SetYHalfLength(double half);
+  void SetZHalfLength(double half);
+  void SetThickness(double thickness);
+
+
+public:
+  //BoxShell();
   BoxShell(G4String name,  double halfx, double halfy, double halfz, double thickness, G4String material=G4String("G4_Galactic"));
   BoxShell(G4String name,  double halfx, double halfy, double halfz, double thickness,G4Material *material);
+  
   ~BoxShell();
 };
 

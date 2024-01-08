@@ -7,19 +7,41 @@
 #include <G4SubtractionSolid.hh>
 #include <G4Box.hh>
 
-BoxShell::BoxShell() {}
+//BoxShell::BoxShell() {}
+BoxShell::~BoxShell() {}
 
-BoxShell::BoxShell(G4String name, double halfx, double halfy, double halfz, double thickness, G4String material) {
-         G4Box* outerBox = new G4Box("OuterBox",halfx,halfy,halfz);
-        G4Box* innerBox = new G4Box("InnerBox",halfx-thickness,halfy-thickness,halfz-thickness);
+BoxShell::BoxShell(G4String name, double halfx, double halfy, double halfz, double thickness, G4String material):
+//G4CSGSolid(name),
+fHalfX(halfx),fHalfY(halfy),fHalfZ(halfz),fThickness(thickness)
+ {
+        G4Box* outerBox = new G4Box("OuterBox",fHalfX,fHalfY,fHalfZ);
+        G4Box* innerBox = new G4Box("InnerBox",fHalfX-fThickness,fHalfY-fThickness,fHalfZ-fThickness);
         fSolid = new G4SubtractionSolid(name, outerBox, innerBox, 0, G4ThreeVector(0.,0.,0.));
         SetProperties(material, fSolid);
 }
 
-BoxShell::BoxShell(G4String name, double halfx, double halfy, double halfz, double thickness, G4Material *material) {
-        G4Box* outerBox = new G4Box("OuterBox",halfx,halfy,halfz);
-        G4Box* innerBox = new G4Box("InnerBox",halfx-thickness,halfy-thickness,halfz-thickness);
+BoxShell::BoxShell(G4String name, double halfx, double halfy, double halfz, double thickness, G4Material *material):
+//G4CSGSolid(name),
+fHalfX(halfx),fHalfY(halfy),fHalfZ(halfz),fThickness(thickness)
+{
+        G4Box* outerBox = new G4Box("OuterBox",fHalfX,fHalfY,fHalfZ);
+        G4Box* innerBox = new G4Box("InnerBox",fHalfX-fThickness,fHalfY-fThickness,fHalfZ-fThickness);
         fSolid = new G4SubtractionSolid(name, outerBox, innerBox, 0, G4ThreeVector(0.,0.,0.));
         SetProperties(material, fSolid);
 
+}
+void BoxShell::SetXHalfLength(double half){
+        fHalfX = half;
+}
+
+void BoxShell::SetYHalfLength(double half){
+        fHalfY = half;
+}
+
+void BoxShell::SetZHalfLength(double half){
+        fHalfZ = half;
+}
+
+void BoxShell::SetThickness(double thickness){
+        fThickness = thickness;
 }

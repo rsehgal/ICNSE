@@ -40,7 +40,7 @@ G4VPhysicalVolume *DetectorConstruction::Construct() {
   G4bool checkOverlaps = true;
   G4double world_sizeXYZ = 200 * cm;
   G4LogicalVolume *logicalWorld =
-      (new Box("World", 0.5 * world_sizeXYZ, 0.5 * world_sizeXYZ, 0.5 * world_sizeXYZ))->GetLogicalVolume();
+      (new Box("World", 0.5 * world_sizeXYZ, 0.5 * world_sizeXYZ, 0.5 * world_sizeXYZ,"G4_AIR"))->GetLogicalVolume();
   G4VPhysicalVolume *physWorld = new G4PVPlacement(0,               // no rotation
                                                    G4ThreeVector(), // at (0,0,0)
                                                    logicalWorld,    // its logical volume
