@@ -18,10 +18,13 @@ class G4Material;
 class DetectorConstruction : public G4VUserDetectorConstruction
 {
   //G4Material *fScintMaterial;
+  G4LogicalVolume *logicalWorld;
+
 public:
 	DetectorConstruction();
 	~DetectorConstruction();
 	G4VPhysicalVolume* Construct();
+	G4LogicalVolume *GetLogicalWorld() const;
   
 
 public:

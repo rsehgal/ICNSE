@@ -32,6 +32,10 @@ DetectorConstruction::DetectorConstruction() { fSDMan = G4SDManager::GetSDMpoint
 
 DetectorConstruction::~DetectorConstruction() {}
 
+G4LogicalVolume* DetectorConstruction::GetLogicalWorld() const{
+    return logicalWorld;
+}
+
 G4VPhysicalVolume *DetectorConstruction::Construct() {
 
   // G4NistManager* nist = G4NistManager::Instance();
@@ -40,7 +44,7 @@ G4VPhysicalVolume *DetectorConstruction::Construct() {
   //
   G4bool checkOverlaps = true;
   G4double world_sizeXYZ = 200 * cm;
-  G4LogicalVolume *logicalWorld =
+  logicalWorld =
       (new Box("World", 0.5 * world_sizeXYZ, 0.5 * world_sizeXYZ, 0.5 * world_sizeXYZ,"G4_AIR"))->GetLogicalVolume();
   G4VPhysicalVolume *physWorld = new G4PVPlacement(0,               // no rotation
                                                    G4ThreeVector(), // at (0,0,0)

@@ -23,7 +23,7 @@ void PrintSummary(unsigned int numOfEvents) {
 double GetLogicalVolumeWeight(G4LogicalVolume *logicalVolume) {
   // World volume should not be considered for weight calculation
   double weight = (logicalVolume->GetMaterial()->GetDensity() * logicalVolume->GetSolid()->GetCubicVolume()) / kg;
-  std::cout << "Volume Name : " << logicalVolume->GetName() << " : Weight(Kg) : " << weight << std::endl;
+  std::cout << "Volume Name : " << logicalVolume->GetName() << " : Material : " << logicalVolume->GetMaterial()->GetName() << " : Weight(Kg) : " << weight << std::endl;
   if (logicalVolume->GetSolid()->GetName() == "World")
     weight = 0.;
   unsigned int noOfDaughters = logicalVolume->GetNoDaughters();

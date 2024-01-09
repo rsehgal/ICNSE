@@ -14,7 +14,7 @@
 //#include "B1EventAction.hh"
 #include "SD.h"
 #include "Helpers.h"
-
+#include <G4VUserDetectorConstruction.hh>
 using namespace std;
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -43,6 +43,14 @@ G4Run* RunAction::GenerateRun()
 void RunAction::BeginOfRunAction(const G4Run*)
 {
   G4RunManager::GetRunManager()->SetRandomNumberStore(false);
+  const DetectorConstruction *userDetectorConstruction = 
+  static_cast<const DetectorConstruction*>(
+    G4RunManager::GetRunManager()->GetUserDetectorConstruction()
+    );
+  G4LogicalVolume *logicalWorld = userDetectorConstruction->GetLogicalWorld();
+  std::cout << "@@@@@@@@@@@@@ Weight of Complete Detector @@@@@@@@@@@@" << std::endl;
+  std::cout << GetLogicalVolumeWeight(logicalWorld) << std::endl;
+  std::cout << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" << std::endl;
 
 }
 
