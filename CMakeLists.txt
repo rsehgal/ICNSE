@@ -59,4 +59,8 @@ target_link_libraries(main ${Geant4_LIBRARIES})
 
 add_executable(TestBoolean coreTest/TestBoolean.cpp)
 target_link_libraries(TestBoolean ${Geant4_LIBRARIES})
+
+add_executable(TestG4Units coreTest/TestG4Units.cpp)
+target_link_libraries(TestG4Units ${Geant4_LIBRARIES})
+
 #target_link_libraries(main ${Geant4_LIBRARIES} Tomo)

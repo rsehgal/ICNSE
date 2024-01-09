@@ -26,6 +26,7 @@
 #include <G4LogicalSkinSurface.hh>
 #include <G4OpticalSurface.hh>
 #include <G4SDManager.hh>
+#include "Helpers.h"
 
 DetectorConstruction::DetectorConstruction() { fSDMan = G4SDManager::GetSDMpointer(); }
 
@@ -110,5 +111,8 @@ G4VPhysicalVolume *DetectorConstruction::Construct() {
   fSDMan->AddNewDetector(hollowSD);
   logicalHollowSpace->SetSensitiveDetector(hollowSD);
 
+  std::cout <<"========== TOTAL WEIGHT of DETECTOR =============" << std::endl;
+  std::cout << GetLogicalVolumeWeight(logicalWorld) << std::endl;
+  std::cout <<"=================================================" << std::endl;
   return physWorld;
 }

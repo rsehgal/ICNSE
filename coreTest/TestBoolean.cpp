@@ -9,7 +9,7 @@
 #include <G4SystemOfUnits.hh>
 #include <G4VSolid.hh>
 #include <iostream>
-int main(int argc, char *argv[]) {
+int main() {
 
   G4String name = "TestBoolean";
   double fHalfX = 80 * cm;

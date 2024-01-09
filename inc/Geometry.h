@@ -16,12 +16,11 @@ class G4SubtractionSolid;
 
 #include <G4CSGSolid.hh>
 #include <G4String.hh>
-//class G4String;
-//class DetectorMessenger;
 class G4GenericMessenger;
-
+class G4VSolid;
 class GeometryProperties {
 public:
+  G4VSolid *fSolid;
   G4Material *fMaterial;
   G4LogicalVolume *fLogicalVolume;
   //DetectorMessenger *fGeometryMessenger;
@@ -65,8 +64,6 @@ public:
 };
 
 class CylindricalShell : public GeometryProperties {
-public:
-  G4Tubs *fSolid;
 
 public:
   CylindricalShell();
@@ -76,8 +73,6 @@ public:
 };
 
 class Box : public GeometryProperties {
-public:
-  G4Box *fSolid;
 
 public:
   Box();
@@ -87,13 +82,8 @@ public:
   ~Box();
 };
 
-class BoxShellVSolid{
-
-};
-
 class BoxShell : public GeometryProperties{
-//class BoxShell : public GeometryProperties,public G4CSGSolid {
-//class BoxShell : public G4VSolid {
+
 private:
   double fHalfX;
   double fHalfY;
@@ -101,8 +91,6 @@ private:
   double fThickness;
 
 public:
-  //G4VSolid *fSolid;
-  G4SubtractionSolid *fSolid;
   void SetXHalfLength(double half);
   void SetYHalfLength(double half);
   void SetZHalfLength(double half);
@@ -116,7 +104,4 @@ public:
   
   ~BoxShell();
 };
-
-
-
 #endif
