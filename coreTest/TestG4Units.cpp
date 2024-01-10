@@ -13,6 +13,9 @@
 int main() {
   std::cout << "cm : " << cm << std::endl;
   std::cout << "gram : " << g << std::endl;
+  std::cout << "keV : " << keV << std::endl;
+  std::cout << "MeV : " << MeV << std::endl;
+  std::cout << "GeV : " << GeV << std::endl;
 
   // Example to calculate the weight of a logical volume
   G4Box *box = new G4Box("TestBox", 5 * cm, 5 * cm, 5 * cm);

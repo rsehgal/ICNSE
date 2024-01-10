@@ -13,6 +13,8 @@
 class G4Step;
 class G4HCofThisEvent;
 class G4String;
+class TH1F;
+class Data;
 
 class SD : public G4VSensitiveDetector {
 	private:
@@ -21,6 +23,7 @@ class SD : public G4VSensitiveDetector {
 
 	public:
 	static std::map<G4String,unsigned int> fParticleCounter;
+	static std::map<G4String,Data*> fData;
 
 public:
 	//SD();
@@ -32,6 +35,7 @@ public:
 	virtual G4bool ProcessHits(G4Step* step, G4TouchableHistory* history);
 	virtual void   EndOfEvent(G4HCofThisEvent* hitCollection);
 	void CheckAndCountParticle(G4String particleName );
+	void CheckAndInsertParticleEnergy(G4String particleName,double energy );
 	static int numOfParticlesReached;
 	
 

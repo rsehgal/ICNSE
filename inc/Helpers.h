@@ -11,6 +11,6 @@ class G4LogicalVolume;
 
 extern void PrintSummary(unsigned int numOfEvents);
 extern double GetLogicalVolumeWeight(G4LogicalVolume *logicalVolume);
-
+extern void Write();
 
 #endif

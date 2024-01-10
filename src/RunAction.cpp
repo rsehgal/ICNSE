@@ -15,6 +15,7 @@
 #include "SD.h"
 #include "Helpers.h"
 #include <G4VUserDetectorConstruction.hh>
+#include <TFile.h>
 using namespace std;
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -52,6 +53,8 @@ void RunAction::BeginOfRunAction(const G4Run*)
   std::cout << GetLogicalVolumeWeight(logicalWorld) << std::endl;
   std::cout << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" << std::endl;
 
+  fOutFile = new TFile("icnse_data.root","RECREATE");
+
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -61,6 +64,9 @@ void RunAction::EndOfRunAction(const G4Run* run)
   G4int nofEvents = run->GetNumberOfEvent();
   if (nofEvents == 0) return;
   PrintSummary(nofEvents);
+  fOutFile->cd();
+  Write();
+  fOutFile->Close();
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

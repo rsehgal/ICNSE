@@ -15,8 +15,16 @@
 #include "G4ios.hh"
 #include "SD.h"
 #include "Helpers.h"
+#include "Analysis.h"
+#include <G4SystemOfUnits.hh>
+#include <G4VProcess.hh>
+#include <G4EventManager.hh>
+#include <TH1F.h>
+#include "Data.h"
+
 int SD::numOfParticlesReached = 0;
 std::map<G4String,unsigned int> SD::fParticleCounter = {};
+std::map<G4String,Data*> SD::fData = {};
 //int SD::numOfEventsProcessed = 0;
 
 
@@ -38,14 +46,28 @@ G4bool SD::ProcessHits(G4Step *aStep, G4TouchableHistory *) {
   bool isPrimary = (track->GetParentID() == 0);
   if (isPrimary) {
     G4TouchableHandle touchable = aStep->GetPreStepPoint()->GetTouchableHandle();
-    std::cout << "RAMAN Particle Reached : " << particleName << std::endl;
+    std::cout << "RAMAN Particle Reached : " << particleName << " : VolumeName : "<< touchable->GetVolume()->GetName() << std::endl;
     numOfParticlesReached++;
     track->SetTrackStatus(fStopAndKill);
     CheckAndCountParticle(particleName);
   }
   #else
   numOfParticlesReached++;
+  if(particleName=="gamma"){
+
+    /*const G4VProcess *creatorProcess = track->GetCreatorProcess();
+    if(creatorProcess){
+      std::cout << "Process that creates gamma : " << creatorProcess->GetProcessName() << std::endl;
+      const G4Track* parentTrack = G4EventManager::GetEventManager()->GetTrackingManager()->GetTrack(track->GetParentID());
+      G4String parentParticleName = parentTrack->GetDefinition()->GetParticleName();
+      std::cout << "Parent Particle name : " << parentParticleName << std::endl;
+      std::cout <<"------------------------------------------------" << std::endl;
+    }*/
+  // std::cout << "Energy of Gamma : " << track->GetKineticEnergy()/keV << std::endl;
+  Analysis::Instance()->FillGammaHistogram(track->GetKineticEnergy()/keV);
+  }
   CheckAndCountParticle(particleName);
+  CheckAndInsertParticleEnergy(particleName,track->GetKineticEnergy()/keV);
   #endif
 
   return true;
@@ -57,6 +79,17 @@ if (fParticleCounter.count(particleName)) {
     } else {
         // Particle not found
         fParticleCounter[particleName]=1;
+    }
+}
+
+void SD::CheckAndInsertParticleEnergy(G4String particleName, double energy){
+if (fData.count(particleName)) {
+        // Particle found
+        fData[particleName]->Fill(energy);
+    } else {
+        // Particle not found
+        fData[particleName]=new Data(particleName);
+        fData[particleName]->Fill(energy);
     }
 }
 

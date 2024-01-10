@@ -8,6 +8,7 @@
 #include <G4SystemOfUnits.hh>
 #include <G4VSolid.hh>
 #include <iostream>
+#include "Data.h"
 void PrintSummary(unsigned int numOfEvents) {
   std::cout << "================== SUMMARY ===========================================" << std::endl;
   std::cout << "Total Number of Event : " << numOfEvents << std::endl;
@@ -18,6 +19,13 @@ void PrintSummary(unsigned int numOfEvents) {
   }
 
   std::cout << "======================================================================" << std::endl;
+}
+
+void Write(){
+  for (const auto &pair : SD::fData) {
+    std::cout << "Particle : " << pair.first << " , Count : " << pair.second->GetCount() << std::endl;
+    pair.second->Write();
+  }
 }
 
 double GetLogicalVolumeWeight(G4LogicalVolume *logicalVolume) {
