@@ -36,6 +36,7 @@ public:
 	virtual void   EndOfEvent(G4HCofThisEvent* hitCollection);
 	void CheckAndCountParticle(G4String particleName );
 	void CheckAndInsertParticleEnergy(G4String particleName,double energy );
+	void CheckAndInsertParticleCreatorProcessAndEnergy(G4String particleName,std::string processName, double energy );
 	static int numOfParticlesReached;
 	
 

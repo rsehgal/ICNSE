@@ -67,7 +67,16 @@ G4bool SD::ProcessHits(G4Step *aStep, G4TouchableHistory *) {
   Analysis::Instance()->FillGammaHistogram(track->GetKineticEnergy()/keV);
   }
   CheckAndCountParticle(particleName);
-  CheckAndInsertParticleEnergy(particleName,track->GetKineticEnergy()/keV);
+  double energy = track->GetKineticEnergy()/keV;
+  CheckAndInsertParticleEnergy(particleName,energy);
+
+  const G4VProcess *creatorProcess = track->GetCreatorProcess();
+  std::string processName = "";
+  if(creatorProcess){
+      //std::cout << "Process that creates gamma : " << creatorProcess->GetProcessName() << std::endl;
+       processName = creatorProcess->GetProcessName() ;
+  }
+  CheckAndInsertParticleCreatorProcessAndEnergy(particleName,processName,energy);
   #endif
 
   return true;
@@ -82,6 +91,19 @@ if (fParticleCounter.count(particleName)) {
     }
 }
 
+void SD::CheckAndInsertParticleCreatorProcessAndEnergy(G4String particleName,
+std::string processName, double energy ){
+
+if (fData.count(particleName)) {
+        // Particle found
+        fData[particleName]->Fill(numOfEventsProcessed,processName,energy);
+    } else {
+        // Particle not found
+        fData[particleName]=new Data(particleName);
+        fData[particleName]->Fill(numOfEventsProcessed,processName,energy);
+    }
+
+}
 void SD::CheckAndInsertParticleEnergy(G4String particleName, double energy){
 if (fData.count(particleName)) {
         // Particle found
