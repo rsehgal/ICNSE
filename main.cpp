@@ -21,7 +21,14 @@
 #include <Shielding.hh>
 #include "G4OpticalPhysics.hh"
 
+#include <TFile.h>
+
 #include "Analysis.h"
+
+#ifdef USE_RANECU_RANDOM
+#include "CLHEP/Random/RanecuEngine.h"
+#include "CLHEP/Random/Random.h"
+#endif
 
 int main(int argc,char** argv)
 {
@@ -30,7 +37,13 @@ int main(int argc,char** argv)
     ui = new G4UIExecutive(argc, argv);
   }
 
+#ifdef USE_RANECU_RANDOM
+CLHEP::RanecuEngine* ranecuEngine = new CLHEP::RanecuEngine;
+CLHEP::HepRandom::setTheEngine(ranecuEngine);
+CLHEP::HepRandom::setTheSeed(time(0));
+#endif
 //Analysis *anal = Analysis::Create("icnse.root");
+TFile *fp = new TFile("icnse_data.root","RECREATE");
 
 G4RunManager *runManager = new G4RunManager;
   runManager->SetUserInitialization(new DetectorConstruction());
@@ -76,6 +89,7 @@ G4RunManager *runManager = new G4RunManager;
   //Output::instance()->Close();
   //anal->Close();
   //delete anal;
+  fp->Close();
   delete visManager;
   delete runManager;
   //fp->Close();

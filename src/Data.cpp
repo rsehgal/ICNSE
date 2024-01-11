@@ -18,7 +18,7 @@ Data::Data(){
 }
 
 Data::Data(std::string particleName) : fParticleName(particleName){
-
+    
     fHist = new TH1F(fParticleName.c_str(),fParticleName.c_str(),1000,0,8000);
     fTree = new TTree(fParticleName.c_str(),fParticleName.c_str());
     fTree->Branch("EventNum",&fEvNo);

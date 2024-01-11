@@ -53,7 +53,7 @@ void RunAction::BeginOfRunAction(const G4Run*)
   std::cout << GetLogicalVolumeWeight(logicalWorld) << std::endl;
   std::cout << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" << std::endl;
 
-  fOutFile = new TFile("icnse_data.root","RECREATE");
+  //fOutFile = new TFile("icnse_data.root","RECREATE");
 
 }
 
@@ -63,10 +63,17 @@ void RunAction::EndOfRunAction(const G4Run* run)
 {
   G4int nofEvents = run->GetNumberOfEvent();
   if (nofEvents == 0) return;
-  PrintSummary(nofEvents);
+  /*PrintSummary("SensitiveHollowSpace",nofEvents);
   fOutFile->cd();
   Write();
   fOutFile->Close();
+  */
+ 
+ //WriteSD("BoratedPolyEthylene");
+ //WriteSD("SensitiveHollowSpace");
+ for(unsigned int i = 0 ; i < SD::fVecOfSD.size() ; i++){
+  WriteSD(SD::fVecOfSD[i]);
+ }
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
