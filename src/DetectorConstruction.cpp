@@ -115,6 +115,11 @@ G4VPhysicalVolume *DetectorConstruction::Construct() {
   fSDMan->AddNewDetector(hollowSD);
   logicalHollowSpace->SetSensitiveDetector(hollowSD);
 
+  SD *bpSD = new SD("BoratedPolyEthylene");
+  fSDMan->AddNewDetector(bpSD);
+  logicalInnerBPShell->SetSensitiveDetector(bpSD);
+  
+
   std::cout <<"========== TOTAL WEIGHT of DETECTOR =============" << std::endl;
   std::cout << GetLogicalVolumeWeight(logicalWorld) << std::endl;
   std::cout <<"=================================================" << std::endl;

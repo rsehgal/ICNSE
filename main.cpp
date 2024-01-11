@@ -21,6 +21,8 @@
 #include <Shielding.hh>
 #include "G4OpticalPhysics.hh"
 
+#include <TFile.h>
+
 #include "Analysis.h"
 
 int main(int argc,char** argv)
@@ -31,6 +33,7 @@ int main(int argc,char** argv)
   }
 
 //Analysis *anal = Analysis::Create("icnse.root");
+TFile *fp = new TFile("icnseTest.root","RECREATE");
 
 G4RunManager *runManager = new G4RunManager;
   runManager->SetUserInitialization(new DetectorConstruction());
@@ -76,6 +79,7 @@ G4RunManager *runManager = new G4RunManager;
   //Output::instance()->Close();
   //anal->Close();
   //delete anal;
+  fp->Close();
   delete visManager;
   delete runManager;
   //fp->Close();

@@ -21,18 +21,25 @@
 #include <G4EventManager.hh>
 #include <TH1F.h>
 #include "Data.h"
+#include <TFile.h>
 
-int SD::numOfParticlesReached = 0;
+/*unsigned int SD::numOfParticlesReached = 0;
 std::map<G4String,unsigned int> SD::fParticleCounter = {};
 std::map<G4String,Data*> SD::fData = {};
+*/
 //int SD::numOfEventsProcessed = 0;
 
 
 SD::~SD() {
   // TODO Auto-generated destructor stub
+  //delete fp;
 }
 
-SD::SD(const G4String &name) : G4VSensitiveDetector(name) {
+SD::SD(const G4String &name) : G4VSensitiveDetector(name),fDetName(name) {
+  numOfParticlesReached = 0;
+  numOfEventsProcessed = 0;
+  G4String fileName = (name + ".root");
+  //fp = new TFile(fileName.c_str(),"RECREATE");
 
 }
 
@@ -86,7 +93,7 @@ if (fData.count(particleName)) {
         fData[particleName]->Fill(numOfEventsProcessed,processName,energy);
     } else {
         // Particle not found
-        fData[particleName]=new Data(particleName);
+        fData[particleName]=new Data(particleName+"_"+fDetName);
         //To Fill Tree
         fData[particleName]->Fill(numOfEventsProcessed,processName,energy);
     }
@@ -107,7 +114,22 @@ if (fData.count(particleName)) {
 void SD::EndOfEvent(G4HCofThisEvent *) {
   numOfEventsProcessed++;
   if(!(numOfEventsProcessed%100000) && numOfEventsProcessed!=0){
-    std::cout << "Number of Events Processed : " << numOfEventsProcessed << std::endl;
-    PrintSummary(numOfEventsProcessed);
+    //std::cout << "Number of Events Processed : " << numOfEventsProcessed << std::endl;
+    PrintSummary(fDetName, numOfEventsProcessed);
   }
+}
+
+//Required Getters
+const unsigned int SD::GetGetNumberOfParticlesReachedSD() const {
+  return numOfParticlesReached;
+}
+const std::map<G4String,Data*> SD::GetData() const{
+  return fData;
+}
+const std::map<G4String,unsigned int> SD::GetParticleCounter() const{
+  return fParticleCounter;
+}
+
+TFile* SD::GetFilePointer() const{
+  return fp;
 }
