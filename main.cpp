@@ -25,6 +25,11 @@
 
 #include "Analysis.h"
 
+#ifdef USE_RANECU_RANDOM
+#include "CLHEP/Random/RanecuEngine.h"
+#include "CLHEP/Random/Random.h"
+#endif
+
 int main(int argc,char** argv)
 {
   G4UIExecutive* ui = 0;
@@ -32,8 +37,13 @@ int main(int argc,char** argv)
     ui = new G4UIExecutive(argc, argv);
   }
 
+#ifdef USE_RANECU_RANDOM
+CLHEP::RanecuEngine* ranecuEngine = new CLHEP::RanecuEngine;
+CLHEP::HepRandom::setTheEngine(ranecuEngine);
+CLHEP::HepRandom::setTheSeed(time(0));
+#endif
 //Analysis *anal = Analysis::Create("icnse.root");
-TFile *fp = new TFile("icnseTest.root","RECREATE");
+TFile *fp = new TFile("icnse_data.root","RECREATE");
 
 G4RunManager *runManager = new G4RunManager;
   runManager->SetUserInitialization(new DetectorConstruction());

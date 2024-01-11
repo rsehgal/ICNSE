@@ -28,6 +28,16 @@ if(TRACK_ONLY_PRIMARY)
 add_definitions(-DTRACK_ONLY_PRIMARY)
 endif(TRACK_ONLY_PRIMARY)
 
+option(USE_RANECU_RANDOM "Enabling RANECU random number generator, Required CLHEP, Default is OFF " OFF)
+if(USE_RANECU_RANDOM)
+add_definitions(-DUSE_RANECU_RANDOM)
+find_package(CLHEP REQUIRED)
+message(STATUS ${CLHEP_INCLUDE_DIR})
+message(STATUS ${CLHEP_LIBRARIES})
+include_directories(${CLHEP_INCLUDE_DIR})
+#set(REQLIBS ${REQLIBS} ${CLHEP_LIBRARIES} )
+endif(USE_RANECU_RANDOM)
+
 
 #----------------------------------------------------------------------------
 # Find Geant4 package, activating all available UI and Vis drivers by default
@@ -54,12 +64,17 @@ include_directories(../..)
 
 find_package(ROOT REQUIRED)
 include_directories(${ROOT_INCLUDE_DIRS})
+#set(REQLIBS ${REQLIBS} ${ROOT_LIBRARIES} )
 
 file(GLOB sources ${PROJECT_SOURCE_DIR}/src/*.cpp ${PROJECT_SOURCE_DIR}/src/*.cc)
 file(GLOB headers ${PROJECT_SOURCE_DIR}/inc/*.h ${PROJECT_SOURCE_DIR}/inc/*.hh ../../base/Vector3D.h) 
 
 add_executable(main main.cpp ${sources} ${headers})
+if(USE_RANECU_RANDOM)
+target_link_libraries(main ${Geant4_LIBRARIES} ${ROOT_LIBRARIES} ${CLHEP_LIBRARIES})
+else()
 target_link_libraries(main ${Geant4_LIBRARIES} ${ROOT_LIBRARIES})
+endif()
 
 add_executable(TestBoolean coreTest/TestBoolean.cpp)
 target_link_libraries(TestBoolean ${Geant4_LIBRARIES})
