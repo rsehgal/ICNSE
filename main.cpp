@@ -18,6 +18,17 @@
 #include "Randomize.hh"
 
 #include "QGSP_BERT_HP.hh"
+#include <Shielding.hh>
+#include "G4OpticalPhysics.hh"
+
+#include <TFile.h>
+
+#include "Analysis.h"
+
+#ifdef USE_RANECU_RANDOM
+#include "CLHEP/Random/RanecuEngine.h"
+#include "CLHEP/Random/Random.h"
+#endif
 
 int main(int argc,char** argv)
 {
@@ -26,12 +37,25 @@ int main(int argc,char** argv)
     ui = new G4UIExecutive(argc, argv);
   }
 
+#ifdef USE_RANECU_RANDOM
+CLHEP::RanecuEngine* ranecuEngine = new CLHEP::RanecuEngine;
+CLHEP::HepRandom::setTheEngine(ranecuEngine);
+CLHEP::HepRandom::setTheSeed(time(0));
+#endif
+//Analysis *anal = Analysis::Create("icnse.root");
+TFile *fp = new TFile("icnse_data.root","RECREATE");
+
 G4RunManager *runManager = new G4RunManager;
   runManager->SetUserInitialization(new DetectorConstruction());
 
-  G4VModularPhysicsList* physicsList = new QGSP_BERT_HP;//QBBC;
+  G4VModularPhysicsList* physicsList = new Shielding;//QGSP_BERT_HP;//QBBC;
 
   runManager->SetUserInitialization(physicsList);
+
+  #ifdef ENABLE_OPTICAL_PHYSICS
+  G4OpticalPhysics *opticalPhysics = new G4OpticalPhysics();
+  physicsList->RegisterPhysics(opticalPhysics);
+  #endif
     
   runManager->SetUserInitialization(new ActionInitialization());
 
@@ -63,6 +87,9 @@ G4RunManager *runManager = new G4RunManager;
   // in the main() program !
   
   //Output::instance()->Close();
+  //anal->Close();
+  //delete anal;
+  fp->Close();
   delete visManager;
   delete runManager;
   //fp->Close();

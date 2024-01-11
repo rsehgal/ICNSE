@@ -100,18 +100,29 @@
 #/vis/scene/add/text 6 7 10 cm 18 4 4 Shape2
 #
 # To get nice view
-/vis/geometry/set/visibility World 0 false
+/vis/geometry/set/visibility World_Logical 0 false
 /vis/geometry/set/visibility Envelope 0 false
 #/vis/viewer/set/style surface
 /vis/viewer/set/hiddenMarker true
 /vis/viewer/set/viewpointThetaPhi 120 150
 
-/ICNSE/setInnerRadius InnerShell_Logical 0.2
-/ICNSE/setInnerRadius TestShell_Logical 2.9
-/vis/geometry/set/colour InnerShell_Logical 1 1 0 1 1
-/vis/geometry/set/colour TestShell_Logical 1 0 1 1 1
-/vis/geometry/set/forceSolid InnerShell_Logical 1 true
-/vis/geometry/set/forceSolid TestShell_Logical 1 true
+#/ICNSE/setInnerRadius Shell0_Logical 0.2
+#/ICNSE/setInnerRadius Shell1_Logical 2.9
+/vis/geometry/set/colour Shell0_Logical 1 1 0 1 0.5 
+/vis/geometry/set/colour Shell1_Logical 1 0 1 1 0.5
+/vis/geometry/set/colour HollowSpace_Logical 1 153 102 0 0.5 
+/vis/geometry/set/forceSolid Shell0_Logical 1 true
+/vis/geometry/set/forceSolid Shell1_Logical 1 true
+/vis/geometry/set/forceSolid HollowSpace_Logical 1 true
+/ICNSE/setMaterial Shell0_Logical G4_Al
+/ICNSE/setMaterial Shell1_Logical G4_Pb
+/ICNSE/setMaterial HollowSpace_Logical G4_AIR
+/ICNSE/setMaterial World_Logical G4_AIR
+
+/gun/particle mu-
+/gun/energy 1 GeV
+/gun/position -60 0 0 cm
+/gun/direction 1 0 0
 
 #
 # Re-establish auto refreshing and verbosity:

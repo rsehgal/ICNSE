@@ -14,11 +14,13 @@
 using namespace std;
 class G4Run;
 class G4LogicalVolume;
+class TFile;
 
 
 class RunAction : public G4UserRunAction
 {
 
+  TFile *fOutFile;
   public:
    //static ofstream *myfile;
     //static ofstream GetEnergyFile(){return myfile;}

@@ -13,7 +13,9 @@
 #include <string.h>
 //#include "B1EventAction.hh"
 #include "SD.h"
-
+#include "Helpers.h"
+#include <G4VUserDetectorConstruction.hh>
+#include <TFile.h>
 using namespace std;
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -42,6 +44,16 @@ G4Run* RunAction::GenerateRun()
 void RunAction::BeginOfRunAction(const G4Run*)
 {
   G4RunManager::GetRunManager()->SetRandomNumberStore(false);
+  const DetectorConstruction *userDetectorConstruction = 
+  static_cast<const DetectorConstruction*>(
+    G4RunManager::GetRunManager()->GetUserDetectorConstruction()
+    );
+  G4LogicalVolume *logicalWorld = userDetectorConstruction->GetLogicalWorld();
+  std::cout << "@@@@@@@@@@@@@ Weight of Complete Detector @@@@@@@@@@@@" << std::endl;
+  std::cout << GetLogicalVolumeWeight(logicalWorld) << std::endl;
+  std::cout << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" << std::endl;
+
+  //fOutFile = new TFile("icnse_data.root","RECREATE");
 
 }
 
@@ -51,11 +63,17 @@ void RunAction::EndOfRunAction(const G4Run* run)
 {
   G4int nofEvents = run->GetNumberOfEvent();
   if (nofEvents == 0) return;
-
-  std::cout  << "====================================================================" << std::endl;
-  std::cout << "Total Number of Event : " << nofEvents << std::endl;
-  std::cout << "No of Particles reaches Sensitive Detector Region : " << SD::numOfParticlesReached << std::endl;  
-  std::cout  << "====================================================================" << std::endl;
+  /*PrintSummary("SensitiveHollowSpace",nofEvents);
+  fOutFile->cd();
+  Write();
+  fOutFile->Close();
+  */
+ 
+ //WriteSD("BoratedPolyEthylene");
+ //WriteSD("SensitiveHollowSpace");
+ for(unsigned int i = 0 ; i < SD::fVecOfSD.size() ; i++){
+  WriteSD(SD::fVecOfSD[i]);
+ }
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
