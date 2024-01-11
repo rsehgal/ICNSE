@@ -53,30 +53,17 @@ G4bool SD::ProcessHits(G4Step *aStep, G4TouchableHistory *) {
   }
   #else
   numOfParticlesReached++;
-  if(particleName=="gamma"){
-
-    /*const G4VProcess *creatorProcess = track->GetCreatorProcess();
-    if(creatorProcess){
-      std::cout << "Process that creates gamma : " << creatorProcess->GetProcessName() << std::endl;
-      const G4Track* parentTrack = G4EventManager::GetEventManager()->GetTrackingManager()->GetTrack(track->GetParentID());
-      G4String parentParticleName = parentTrack->GetDefinition()->GetParticleName();
-      std::cout << "Parent Particle name : " << parentParticleName << std::endl;
-      std::cout <<"------------------------------------------------" << std::endl;
-    }*/
-  // std::cout << "Energy of Gamma : " << track->GetKineticEnergy()/keV << std::endl;
-  //Analysis::Instance()->FillGammaHistogram(track->GetKineticEnergy()/keV);
-  }
   CheckAndCountParticle(particleName);
   double energy = track->GetKineticEnergy()/keV;
   //CheckAndInsertParticleEnergy(particleName,energy);
-
   const G4VProcess *creatorProcess = track->GetCreatorProcess();
   std::string processName = "";
   if(creatorProcess){
       //std::cout << "Process that creates gamma : " << creatorProcess->GetProcessName() << std::endl;
        processName = creatorProcess->GetProcessName() ;
+       CheckAndInsertParticleCreatorProcessAndEnergy(particleName,processName,energy);
   }
-  CheckAndInsertParticleCreatorProcessAndEnergy(particleName,processName,energy);
+  
   #endif
 
   return true;
