@@ -64,11 +64,11 @@ G4bool SD::ProcessHits(G4Step *aStep, G4TouchableHistory *) {
       std::cout <<"------------------------------------------------" << std::endl;
     }*/
   // std::cout << "Energy of Gamma : " << track->GetKineticEnergy()/keV << std::endl;
-  Analysis::Instance()->FillGammaHistogram(track->GetKineticEnergy()/keV);
+  //Analysis::Instance()->FillGammaHistogram(track->GetKineticEnergy()/keV);
   }
   CheckAndCountParticle(particleName);
   double energy = track->GetKineticEnergy()/keV;
-  CheckAndInsertParticleEnergy(particleName,energy);
+  //CheckAndInsertParticleEnergy(particleName,energy);
 
   const G4VProcess *creatorProcess = track->GetCreatorProcess();
   std::string processName = "";
@@ -100,6 +100,7 @@ if (fData.count(particleName)) {
     } else {
         // Particle not found
         fData[particleName]=new Data(particleName);
+        //To Fill Tree
         fData[particleName]->Fill(numOfEventsProcessed,processName,energy);
     }
 
@@ -111,7 +112,8 @@ if (fData.count(particleName)) {
     } else {
         // Particle not found
         fData[particleName]=new Data(particleName);
-        fData[particleName]->Fill(energy);
+        //To Fill Histogram
+        //fData[particleName]->Fill(energy);
     }
 }
 

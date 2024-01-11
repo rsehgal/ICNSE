@@ -30,7 +30,7 @@ int main(int argc,char** argv)
     ui = new G4UIExecutive(argc, argv);
   }
 
-Analysis *anal = Analysis::Create("icnse.root");
+//Analysis *anal = Analysis::Create("icnse.root");
 
 G4RunManager *runManager = new G4RunManager;
   runManager->SetUserInitialization(new DetectorConstruction());
@@ -74,8 +74,8 @@ G4RunManager *runManager = new G4RunManager;
   // in the main() program !
   
   //Output::instance()->Close();
-  anal->Close();
-  delete anal;
+  //anal->Close();
+  //delete anal;
   delete visManager;
   delete runManager;
   //fp->Close();
