@@ -30,6 +30,8 @@ class SD : public G4VSensitiveDetector {
 	//static 
 	unsigned int numOfParticlesReached;
 
+	static std::vector<G4String> fVecOfSD;
+
 	std::string fDetName;
 
 
@@ -54,6 +56,7 @@ public:
 	const std::map<G4String,Data*> GetData() const;
 	const std::map<G4String,unsigned int> GetParticleCounter() const;
 	TFile* GetFilePointer() const;
+	std::vector<G4String> GetVecOfSD() const;
 	
 
 

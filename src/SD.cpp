@@ -29,6 +29,8 @@ std::map<G4String,Data*> SD::fData = {};
 */
 //int SD::numOfEventsProcessed = 0;
 
+std::vector<G4String> SD::fVecOfSD = {};
+
 
 SD::~SD() {
   // TODO Auto-generated destructor stub
@@ -38,6 +40,7 @@ SD::~SD() {
 SD::SD(const G4String &name) : G4VSensitiveDetector(name),fDetName(name) {
   numOfParticlesReached = 0;
   numOfEventsProcessed = 0;
+  fVecOfSD.push_back(fDetName);
   G4String fileName = (name + ".root");
   //fp = new TFile(fileName.c_str(),"RECREATE");
 
@@ -132,4 +135,8 @@ const std::map<G4String,unsigned int> SD::GetParticleCounter() const{
 
 TFile* SD::GetFilePointer() const{
   return fp;
+}
+
+std::vector<G4String> SD::GetVecOfSD() const{
+  return fVecOfSD;
 }
