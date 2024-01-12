@@ -18,7 +18,7 @@
 
 void WriteSD(G4String sdName){
       unsigned int nofEvents = G4RunManager::GetRunManager()->GetCurrentRun()->GetNumberOfEventToBeProcessed();
-  PrintSummary(sdName,nofEvents);
+  //PrintSummary(sdName,nofEvents);
   Write(sdName);
 }
 
