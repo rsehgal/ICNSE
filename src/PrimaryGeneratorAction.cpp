@@ -11,18 +11,45 @@
 #include "G4RunManager.hh"
 #include "G4SystemOfUnits.hh"
 #include "Randomize.hh"
+#include <G4IonTable.hh>
+#include <G4ParticleGun.hh>
+#include <G4ParticleDefinition.hh>
+//#include "RadioactiveSource.h"
+#include <G4Geantino.hh>
 
 PrimaryGeneratorAction::PrimaryGeneratorAction() {
-  G4int n_particle = 1;
-  fParticleGun = new G4ParticleGun(n_particle);
-  fParticleGun->SetParticleDefinition(G4Electron::ElectronDefinition());
-
-  // Set the kinetic energy of the protons to 50 keV
-  // and tell the gun to emit them along the x-axis
-  // fParticleGun->SetParticleEnergy(50. * keV);
-  // fParticleGun->SetParticlePosition(G4ThreeVector(0., 0., -120 * cm ));
-  // fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0., 0., 1.));
+  //Default place holders
+  fParticleGun = new G4ParticleGun(1);
+  G4ParticleTable *particleTable = G4ParticleTable::GetParticleTable();
+  G4ParticleDefinition *particle = particleTable->FindParticle("geantino");
+  G4ThreeVector pos(-90.*cm,0.,0.);
+  G4ThreeVector mom(1.,0.,0.);
+  fParticleGun->SetParticlePosition(pos);
+  fParticleGun->SetParticleMomentumDirection(mom);
+  fParticleGun->SetParticleMomentum(0.*GeV);
+  fParticleGun->SetParticleDefinition(particle);
+ 
 }
 PrimaryGeneratorAction::~PrimaryGeneratorAction() { delete fParticleGun; }
 
-void PrimaryGeneratorAction::GeneratePrimaries(G4Event *event) { fParticleGun->GeneratePrimaryVertex(event); }
+void PrimaryGeneratorAction::GeneratePrimaries(G4Event *event) { 
+
+//std::cout << "INSIDE GENERATE PRIMARIESSS..........." << std::endl;
+G4ParticleDefinition *particle = fParticleGun->GetParticleDefinition();
+
+//If particle gun is NOT set from the macro then it will use the default
+//Cs137 as particle gun
+
+if(particle == G4Geantino::Geantino()){  
+  std::cout <<"@@@@ Changed particle from geantino to required ion @@@@" << std::endl;
+    
+    double charge = 0.*eplus;
+    double energy = 0.*keV;
+    //Creating Cs137 source
+    G4ParticleDefinition *ion = G4IonTable::GetIonTable()->GetIon(55, 137, energy);  
+    fParticleGun->SetParticleDefinition(ion);
+    fParticleGun->SetParticleCharge(charge);
+}
+  fParticleGun->GeneratePrimaryVertex(event); 
+  
+  }

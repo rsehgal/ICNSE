@@ -111,6 +111,7 @@ G4VPhysicalVolume *DetectorConstruction::Construct() {
   new G4PVPlacement(0, G4ThreeVector(), logicalOuterPSShell, "OuterPSShell_Physical", logicalWorld, false, 0,
                     checkOverlaps);
   
+
   SD *hollowSD = new SD("SensitiveHollowSpace");
   fSDMan->AddNewDetector(hollowSD);
   logicalHollowSpace->SetSensitiveDetector(hollowSD);
@@ -118,7 +119,23 @@ G4VPhysicalVolume *DetectorConstruction::Construct() {
   SD *bpSD = new SD("BoratedPolyEthylene");
   fSDMan->AddNewDetector(bpSD);
   logicalInnerBPShell->SetSensitiveDetector(bpSD);
-  
+
+#ifdef INSPECT_SOURCE
+  G4LogicalVolume *logicalSource = (new Box("Source", 0.5*cm,0.5*cm,0.5*cm))->GetLogicalVolume();
+  G4VPhysicalVolume *physSource = new G4PVPlacement(0,               // no rotation
+                                                   G4ThreeVector(-90*cm,0.,0.), // at (0,0,0)
+                                                   logicalSource,    // its logical volume
+                                                   "SourceEnvelop", // its name
+                                                   logicalWorld,               // its mother  volume
+                                                   false,           // no boolean operation
+                                                   0,               // copy number
+                                                   checkOverlaps);  // overlaps checking
+
+
+  SD *sourceSD = new SD("RadioactiveSource");
+  fSDMan->AddNewDetector(sourceSD);
+  logicalSource->SetSensitiveDetector(sourceSD);
+#endif
 
   std::cout <<"========== TOTAL WEIGHT of DETECTOR =============" << std::endl;
   std::cout << GetLogicalVolumeWeight(logicalWorld) << std::endl;
