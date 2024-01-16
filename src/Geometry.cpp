@@ -20,6 +20,8 @@
 #include <G4SurfaceProperty.hh>
 #include "Materials.h"
 #include <G4SubtractionSolid.hh>
+#include <G4VisAttributes.hh>
+#include <G4Color.hh>
 std::vector<G4LogicalVolume *> vecOfLogicalVolumes;
 
 GeometryProperties::GeometryProperties() {}
@@ -140,8 +142,13 @@ void GeometryProperties::SetProperties(G4String material, G4VSolid *solid) {
 
   //G4NistManager *nist = G4NistManager::Instance();
   Materials *nist = Materials::Instance();
+  std::map<G4String,G4VisAttributes*> colorMap = nist->GetColorMap();
   G4Material *solid_material = nist->FindOrBuildMaterial(material);
   fLogicalVolume = new G4LogicalVolume(solid, solid_material, solid->GetName() + "_Logical");
+  if(colorMap.count(material)){
+  colorMap[material]->SetForceSolid(true);
+  fLogicalVolume->SetVisAttributes(colorMap[material]);
+  }
   vecOfLogicalVolumes.push_back(fLogicalVolume);
   DefineCommands();
 }

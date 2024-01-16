@@ -9,6 +9,8 @@
 #include <G4OpticalSurface.hh>
 #include <G4SurfaceProperty.hh>
 #include <G4SystemOfUnits.hh>
+#include <G4VisAttributes.hh>
+#include <G4Color.hh>
 
 Materials *Materials::s_instance = 0;
 
@@ -19,12 +21,26 @@ Materials *Materials::Instance() {
 }
 
 Materials::Materials() {
+  #ifdef FILL_COLOUR
+  fColor["G4_Pb"] = new G4VisAttributes(G4Colour(0.5,0.5,0,1));
+  fColor["ICNSE_BP"] = new G4VisAttributes(G4Colour(0.5,1,0.6,1));
+  fColor["ICNSE_HDPE"] = new G4VisAttributes(G4Colour(1,0.5,1,1));
+  fColor["ICNSE_PS"] = new G4VisAttributes(G4Colour(0.,1,0,1));
+  fColor["G4_Cu"] = new G4VisAttributes(G4Colour(1.,1,0,01));
+  #endif
+
   CreateBoratedPolyethylene();
   CreateHighDensityPolyethylene();
   CreateScintillatorMaterial();
 }
 
 Materials::~Materials() {}
+
+std::map<G4String,G4VisAttributes*> Materials::GetColorMap()const{
+return fColor;
+}
+
+
 
 /*
 ** Add the new function corresponding to desired material
@@ -54,6 +70,7 @@ void Materials::CreateBoratedPolyethylene() {
   ** to be searched while creating the materials in detector constrution
   */
   fMaterialMap["ICNSE_BP"] = fBP;
+  
 }
 
 void Materials::CreateHighDensityPolyethylene() {
@@ -63,6 +80,7 @@ void Materials::CreateHighDensityPolyethylene() {
   nistManager->BuildMaterialWithNewDensity("HighDensityPolyethylene", "G4_POLYETHYLENE", density);
   fHDPE = G4NistManager::Instance()->FindOrBuildMaterial("HighDensityPolyethylene");
   fMaterialMap["ICNSE_HDPE"] = fHDPE;
+  
 }
 
 void Materials::CreateScintillatorMaterial() {
