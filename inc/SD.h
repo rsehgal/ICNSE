@@ -32,6 +32,8 @@ class SD : public G4VSensitiveDetector {
 
 	static std::vector<G4String> fVecOfSD;
 
+	std::vector<std::string> fVecOfTrackID;
+
 	std::string fDetName;
 
 
@@ -49,7 +51,7 @@ public:
 	void CheckAndCountParticle(G4String particleName );
 	void CheckAndInsertParticleEnergy(G4String particleName,double energy );
 	void CheckAndInsertParticleCreatorProcessAndEnergy(G4String particleName,std::string processName, double energy );
-	
+	bool TrackFound(std::string trackId);
 
 	//Required Getters
 	const unsigned int GetGetNumberOfParticlesReachedSD() const ;

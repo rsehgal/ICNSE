@@ -22,6 +22,7 @@
 #include <TH1F.h>
 #include "Data.h"
 #include <TFile.h>
+#include <algorithm>
 
 /*unsigned int SD::numOfParticlesReached = 0;
 std::map<G4String,unsigned int> SD::fParticleCounter = {};
@@ -46,7 +47,7 @@ SD::SD(const G4String &name) : G4VSensitiveDetector(name),fDetName(name) {
 
 }
 
-void SD::Initialize(G4HCofThisEvent *hce) { }
+void SD::Initialize(G4HCofThisEvent *hce) { fVecOfTrackID.clear();}
 
 G4bool SD::ProcessHits(G4Step *aStep, G4TouchableHistory *) {
 
@@ -62,10 +63,14 @@ G4bool SD::ProcessHits(G4Step *aStep, G4TouchableHistory *) {
     CheckAndCountParticle(particleName);
   }
   #else
+  std::string trackId = std::to_string(track->GetTrackID())+"_"+std::to_string(numOfEventsProcessed);
+  //std::cout << "TrackID : " << trackId << std::endl;
+  if(!TrackFound(trackId)){
+    //std::cout <<"========== Inserting : "<< trackId <<" ==========" << std::endl;
+    fVecOfTrackID.push_back(trackId);
   numOfParticlesReached++;
   CheckAndCountParticle(particleName);
   double energy = track->GetKineticEnergy()/keV;
-  //CheckAndInsertParticleEnergy(particleName,energy);
   const G4VProcess *creatorProcess = track->GetCreatorProcess();
   std::string processName = "";
   if(creatorProcess){
@@ -73,11 +78,26 @@ G4bool SD::ProcessHits(G4Step *aStep, G4TouchableHistory *) {
        processName = creatorProcess->GetProcessName() ;
        CheckAndInsertParticleCreatorProcessAndEnergy(particleName,processName,energy);
   }
+  }
+  /*
+  else{
+    std::cout <<"========== NOT Inserting : "<< trackId <<" ==========" << std::endl;
+  }
+  */
   
   #endif
 
   return true;
 }
+
+bool SD::TrackFound(std::string trackId){
+bool found = false;
+if(fVecOfTrackID.size()){
+  found = (std::find(fVecOfTrackID.begin(), fVecOfTrackID.end(),trackId)!=fVecOfTrackID.end());
+}
+return found;
+}
+
 void SD::CheckAndCountParticle(G4String particleName){
 if (fParticleCounter.count(particleName)) {
         // Particle found

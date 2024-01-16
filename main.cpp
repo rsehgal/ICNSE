@@ -24,7 +24,7 @@
 #include <TFile.h>
 
 #include "Analysis.h"
-
+//#include "Physics.h"
 #include <unistd.h> //To get process id
 
 #ifdef USE_RANECU_RANDOM
@@ -54,7 +54,6 @@ G4RunManager *runManager = new G4RunManager;
   runManager->SetUserInitialization(new DetectorConstruction());
 
   G4VModularPhysicsList* physicsList = new Shielding;//QGSP_BERT_HP;//QBBC;
-
   runManager->SetUserInitialization(physicsList);
 
   #ifdef ENABLE_OPTICAL_PHYSICS

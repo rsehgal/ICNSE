@@ -23,6 +23,16 @@ if(ENABLE_OPTICAL_PHYSICS)
 add_definitions(-DENABLE_OPTICAL_PHYSICS)
 endif(ENABLE_OPTICAL_PHYSICS)
 
+option(INSPECT_SOURCE "Inspect Particle source, default is OFF " OFF)
+if(INSPECT_SOURCE)
+add_definitions(-DINSPECT_SOURCE)
+endif(INSPECT_SOURCE)
+
+option(FILL_COLOUR "Assign default color to detector components, default is OFF " OFF)
+if(FILL_COLOUR)
+add_definitions(-DFILL_COLOUR)
+endif(FILL_COLOUR)
+
 option(TRACK_ONLY_PRIMARY "Enabling OPTICAL Physics, Default is OFF " OFF)
 if(TRACK_ONLY_PRIMARY)
 add_definitions(-DTRACK_ONLY_PRIMARY)
