@@ -3,37 +3,27 @@
 **	2023-12-29
 **	username : rsehgal
 */
-#include<iostream>
 #include "ActionInitialization.h"
 #include "PrimaryGeneratorAction.h"
 #include "RunAction.h"
+#include <iostream>
 //#include "B1EventAction.hh"
 //#include "B1SteppingAction.hh"
 
+ActionInitialization::ActionInitialization() : G4VUserActionInitialization() {}
 
-ActionInitialization::ActionInitialization()
- : G4VUserActionInitialization()
-{}
+ActionInitialization::~ActionInitialization() {}
 
-
-ActionInitialization::~ActionInitialization()
-{}
-
-
-void ActionInitialization::BuildForMaster() const
-{
-//  SetUserAction(new RunAction);
+void ActionInitialization::BuildForMaster() const {
+  //  SetUserAction(new RunAction);
 }
 
-
-void ActionInitialization::Build() const
-{
+void ActionInitialization::Build() const {
   SetUserAction(new PrimaryGeneratorAction);
   SetUserAction(new RunAction);
-  
-//  B1EventAction* eventAction = new B1EventAction;
-//  SetUserAction(eventAction);
-  
-//  SetUserAction(new B1SteppingAction(eventAction));
-}  
 
+  //  B1EventAction* eventAction = new B1EventAction;
+  //  SetUserAction(eventAction);
+
+  //  SetUserAction(new B1SteppingAction(eventAction));
+}

@@ -11,23 +11,20 @@
 class TH1F;
 class TFile;
 
-class Analysis{
+class Analysis {
 
-private : 
-static Analysis *s_instance;
-Analysis(std::string filename);
+private:
+  static Analysis *s_instance;
+  Analysis(std::string filename);
 
-
-//ROOT objects
-TH1F *fHistGamma;
-TFile *fp;
-
+  // ROOT objects
+  TH1F *fHistGamma;
+  TFile *fp;
 
 public:
-static Analysis* Instance();
-static Analysis* Create(std::string filename);
-void FillGammaHistogram(double energy);
-void Close();
-
+  static Analysis *Instance();
+  static Analysis *Create(std::string filename);
+  void FillGammaHistogram(double energy);
+  void Close();
 };
 #endif

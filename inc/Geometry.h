@@ -23,8 +23,8 @@ public:
   G4VSolid *fSolid;
   G4Material *fMaterial;
   G4LogicalVolume *fLogicalVolume;
-  //DetectorMessenger *fGeometryMessenger;
-  G4GenericMessenger *fGeometryMessenger=nullptr;
+  // DetectorMessenger *fGeometryMessenger;
+  G4GenericMessenger *fGeometryMessenger = nullptr;
 
 public:
   GeometryProperties();
@@ -33,31 +33,31 @@ public:
   void SetProperties(G4String material, G4VSolid *solid);
   void SetProperties(G4Material *material, G4VSolid *solid);
   ~GeometryProperties();
-  //void SetMaterial(G4Material *material);
-  void SetMaterial(G4String logicalVolumeName,G4String material);
-  
+  // void SetMaterial(G4Material *material);
+  void SetMaterial(G4String logicalVolumeName, G4String material);
+
   // Function to change the inner and outer radius of tube
-  void SetInnerRadius(G4String logicalVolumeName,double innerRad);
-  void SetOuterRadius(G4String logicalVolumeName,double outerRad);
+  void SetInnerRadius(G4String logicalVolumeName, double innerRad);
+  void SetOuterRadius(G4String logicalVolumeName, double outerRad);
 
   // Functions to change Box dimensions
-  void SetBoxXDim(G4String logicalVolumeName,double half);
-  void SetBoxYDim(G4String logicalVolumeName,double half);
-  void SetBoxZDim(G4String logicalVolumeName,double half);
-  void SetBoxAllDim(G4String logicalVolumeName,double halfx, double halfy, double halfz);
+  void SetBoxXDim(G4String logicalVolumeName, double half);
+  void SetBoxYDim(G4String logicalVolumeName, double half);
+  void SetBoxZDim(G4String logicalVolumeName, double half);
+  void SetBoxAllDim(G4String logicalVolumeName, double halfx, double halfy, double halfz);
 
   // Functions to change BoxShell dimension
-  void SetBoxShellXDim(G4String logicalVolumeName,double half);
-  void SetBoxShellYDim(G4String logicalVolumeName,double half);
-  void SetBoxShellZDim(G4String logicalVolumeName,double half);
-  void SetBoxShellThickness(G4String logicalVolumeName,double thickness);
-   // Function to create geometry from UI
-   /*void CreateBox(G4String name, double halfx, double halfy, double halfz,
-                  G4String material,G4Rotation *rot, G4ThreeVector trans,
-                  G4LogicalVolume *)
-    */              
+  void SetBoxShellXDim(G4String logicalVolumeName, double half);
+  void SetBoxShellYDim(G4String logicalVolumeName, double half);
+  void SetBoxShellZDim(G4String logicalVolumeName, double half);
+  void SetBoxShellThickness(G4String logicalVolumeName, double thickness);
+  // Function to create geometry from UI
+  /*void CreateBox(G4String name, double halfx, double halfy, double halfz,
+                 G4String material,G4Rotation *rot, G4ThreeVector trans,
+                 G4LogicalVolume *)
+   */
 
-  //void SetInnerRadius(double innerRad);
+  // void SetInnerRadius(double innerRad);
   G4Material *GetMaterial() const;
   G4LogicalVolume *GetLogicalVolume() const;
   void DefineCommands();
@@ -67,8 +67,9 @@ class CylindricalShell : public GeometryProperties {
 
 public:
   CylindricalShell();
-  CylindricalShell(G4String name, double rmin, double rmax, double dz, double sphi, double dphi,G4String material=G4String("G4_Galactic"));
-  CylindricalShell(G4String name, double rmin, double rmax, double dz, double sphi, double dphi,G4Material *material);
+  CylindricalShell(G4String name, double rmin, double rmax, double dz, double sphi, double dphi,
+                   G4String material = G4String("G4_Galactic"));
+  CylindricalShell(G4String name, double rmin, double rmax, double dz, double sphi, double dphi, G4Material *material);
   ~CylindricalShell();
 };
 
@@ -76,13 +77,13 @@ class Box : public GeometryProperties {
 
 public:
   Box();
-  Box(G4String name,  double halfx, double halfy, double halfz,G4String material=G4String("G4_Galactic"));
-  Box(G4String name,  double halfx, double halfy, double halfz,G4Material *material);
-  
+  Box(G4String name, double halfx, double halfy, double halfz, G4String material = G4String("G4_Galactic"));
+  Box(G4String name, double halfx, double halfy, double halfz, G4Material *material);
+
   ~Box();
 };
 
-class BoxShell : public GeometryProperties{
+class BoxShell : public GeometryProperties {
 
 private:
   double fHalfX;
@@ -96,12 +97,12 @@ public:
   void SetZHalfLength(double half);
   void SetThickness(double thickness);
 
-
 public:
-  //BoxShell();
-  BoxShell(G4String name,  double halfx, double halfy, double halfz, double thickness, G4String material=G4String("G4_Galactic"));
-  BoxShell(G4String name,  double halfx, double halfy, double halfz, double thickness,G4Material *material);
-  
+  // BoxShell();
+  BoxShell(G4String name, double halfx, double halfy, double halfz, double thickness,
+           G4String material = G4String("G4_Galactic"));
+  BoxShell(G4String name, double halfx, double halfy, double halfz, double thickness, G4Material *material);
+
   ~BoxShell();
 };
 #endif

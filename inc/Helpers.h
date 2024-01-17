@@ -6,8 +6,8 @@
 #ifndef Helpers_h
 #define Helpers_h
 
-#include <vector>
 #include <G4String.hh>
+#include <vector>
 class G4LogicalVolume;
 
 extern void PrintSummary(unsigned int numOfEvents);

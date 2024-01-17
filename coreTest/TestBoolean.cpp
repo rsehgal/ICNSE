@@ -18,7 +18,7 @@ int main() {
   double fThickness = 10 * cm;
   G4Box *outerBox = new G4Box("OuterBox", fHalfX, fHalfY, fHalfZ);
   G4Box *innerBox = new G4Box("InnerBox", fHalfX - fThickness, fHalfY - fThickness, fHalfZ - fThickness);
-  G4SubtractionSolid *boxShell = new G4SubtractionSolid(name, outerBox, innerBox);//, 0, G4ThreeVector(0., 0., 0.));
+  G4SubtractionSolid *boxShell = new G4SubtractionSolid(name, outerBox, innerBox); //, 0, G4ThreeVector(0., 0., 0.));
 
   G4VSolid *boxOuter = boxShell->GetConstituentSolid(0);
   G4VSolid *boxInner = boxShell->GetConstituentSolid(1);

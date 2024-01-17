@@ -4,13 +4,13 @@
 **	username : rsehgal
 */
 #include "Materials.h"
+#include <G4Color.hh>
 #include <G4Material.hh>
 #include <G4NistManager.hh>
 #include <G4OpticalSurface.hh>
 #include <G4SurfaceProperty.hh>
 #include <G4SystemOfUnits.hh>
 #include <G4VisAttributes.hh>
-#include <G4Color.hh>
 
 Materials *Materials::s_instance = 0;
 
@@ -21,13 +21,13 @@ Materials *Materials::Instance() {
 }
 
 Materials::Materials() {
-  #ifdef FILL_COLOUR
-  fColor["G4_Pb"] = new G4VisAttributes(G4Colour(0.5,0.5,0,1));
-  fColor["ICNSE_BP"] = new G4VisAttributes(G4Colour(0.5,1,0.6,1));
-  fColor["ICNSE_HDPE"] = new G4VisAttributes(G4Colour(1,0.5,1,1));
-  fColor["ICNSE_PS"] = new G4VisAttributes(G4Colour(0.,1,0,1));
-  fColor["G4_Cu"] = new G4VisAttributes(G4Colour(1.,1,0,01));
-  #endif
+#ifdef FILL_COLOUR
+  fColor["G4_Pb"] = new G4VisAttributes(G4Colour(0.5, 0.5, 0, 1));
+  fColor["ICNSE_BP"] = new G4VisAttributes(G4Colour(0.5, 1, 0.6, 1));
+  fColor["ICNSE_HDPE"] = new G4VisAttributes(G4Colour(1, 0.5, 1, 1));
+  fColor["ICNSE_PS"] = new G4VisAttributes(G4Colour(0., 1, 0, 1));
+  fColor["G4_Cu"] = new G4VisAttributes(G4Colour(1., 1, 0, 01));
+#endif
 
   CreateBoratedPolyethylene();
   CreateHighDensityPolyethylene();
@@ -36,11 +36,7 @@ Materials::Materials() {
 
 Materials::~Materials() {}
 
-std::map<G4String,G4VisAttributes*> Materials::GetColorMap()const{
-return fColor;
-}
-
-
+std::map<G4String, G4VisAttributes *> Materials::GetColorMap() const { return fColor; }
 
 /*
 ** Add the new function corresponding to desired material
@@ -51,15 +47,15 @@ return fColor;
 
 void Materials::CreateBoratedPolyethylene() {
 
-  //G4double density = 0.95 * g / cm3;
+  // G4double density = 0.95 * g / cm3;
   G4double density = 1.04 * g / cm3;
   fBP = new G4Material("BoratedPolyethylene", density, 2);
   /* Define elements and materials (if not already defined)
   ** We are trying to define Borated Polyethylene with required % of Boron
   */
-  //G4Element *elB = new G4Element("Boron", "B", 5, 10.811 * g / mole);
+  // G4Element *elB = new G4Element("Boron", "B", 5, 10.811 * g / mole);
   G4Material *elB = G4NistManager::Instance()->FindOrBuildMaterial("G4_B");
-  //fBP->AddElement(elB, 0.05); // 15% Boron
+  // fBP->AddElement(elB, 0.05); // 15% Boron
   fBP->AddMaterial(elB, 0.05); // 15% Boron
 
   G4Material *polyethylene = G4NistManager::Instance()->FindOrBuildMaterial("G4_POLYETHYLENE");
@@ -70,17 +66,15 @@ void Materials::CreateBoratedPolyethylene() {
   ** to be searched while creating the materials in detector constrution
   */
   fMaterialMap["ICNSE_BP"] = fBP;
-  
 }
 
 void Materials::CreateHighDensityPolyethylene() {
-  //double density = 0.95 * g / cm3;
+  // double density = 0.95 * g / cm3;
   double density = 0.97 * g / cm3;
   G4NistManager *nistManager = G4NistManager::Instance();
   nistManager->BuildMaterialWithNewDensity("HighDensityPolyethylene", "G4_POLYETHYLENE", density);
   fHDPE = G4NistManager::Instance()->FindOrBuildMaterial("HighDensityPolyethylene");
   fMaterialMap["ICNSE_HDPE"] = fHDPE;
-  
 }
 
 void Materials::CreateScintillatorMaterial() {
@@ -145,7 +139,7 @@ void Materials::AttachScintillatorOpticalProperties(G4Material *material) {
   fMaterialMap["ICNSE_PS"] = material;
 }
 
-G4SurfaceProperty* Materials::GetMirror(G4String mirrorName) {
+G4SurfaceProperty *Materials::GetMirror(G4String mirrorName) {
 
   G4double energy[2] = {1.239841939 * eV / 0.9, 1.239841939 * eV / 0.2};
   G4double reflectivity[2] = {1.0, 1.0};

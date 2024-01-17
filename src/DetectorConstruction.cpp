@@ -21,20 +21,18 @@
 #include "G4UnitsTable.hh"
 #include "G4VPhysicalVolume.hh"
 #include "Geometry.h"
+#include "Helpers.h"
 #include "Materials.h"
 #include "SD.h"
 #include <G4LogicalSkinSurface.hh>
 #include <G4OpticalSurface.hh>
 #include <G4SDManager.hh>
-#include "Helpers.h"
 
 DetectorConstruction::DetectorConstruction() { fSDMan = G4SDManager::GetSDMpointer(); }
 
 DetectorConstruction::~DetectorConstruction() {}
 
-G4LogicalVolume* DetectorConstruction::GetLogicalWorld() const{
-    return logicalWorld;
-}
+G4LogicalVolume *DetectorConstruction::GetLogicalWorld() const { return logicalWorld; }
 
 G4VPhysicalVolume *DetectorConstruction::Construct() {
 
@@ -45,7 +43,7 @@ G4VPhysicalVolume *DetectorConstruction::Construct() {
   G4bool checkOverlaps = true;
   G4double world_sizeXYZ = 200 * cm;
   logicalWorld =
-      (new Box("World", 0.5 * world_sizeXYZ, 0.5 * world_sizeXYZ, 0.5 * world_sizeXYZ,"G4_AIR"))->GetLogicalVolume();
+      (new Box("World", 0.5 * world_sizeXYZ, 0.5 * world_sizeXYZ, 0.5 * world_sizeXYZ, "G4_AIR"))->GetLogicalVolume();
   G4VPhysicalVolume *physWorld = new G4PVPlacement(0,               // no rotation
                                                    G4ThreeVector(), // at (0,0,0)
                                                    logicalWorld,    // its logical volume
@@ -90,7 +88,6 @@ G4VPhysicalVolume *DetectorConstruction::Construct() {
       (new BoxShell("OuterHDPEShell", 71 * cm, 71 * cm, 83.5 * cm, 10 * cm, "ICNSE_HDPE"))->GetLogicalVolume();
   G4LogicalVolume *logicalOuterPSShell =
       (new BoxShell("OuterPSShell", 75 * cm, 75 * cm, 87.5 * cm, 4 * cm, "ICNSE_PS"))->GetLogicalVolume();
-  
 
 #endif
   // Physical Placement
@@ -110,7 +107,6 @@ G4VPhysicalVolume *DetectorConstruction::Construct() {
                     checkOverlaps);
   new G4PVPlacement(0, G4ThreeVector(), logicalOuterPSShell, "OuterPSShell_Physical", logicalWorld, false, 0,
                     checkOverlaps);
-  
 
   SD *hollowSD = new SD("SensitiveHollowSpace");
   fSDMan->AddNewDetector(hollowSD);
@@ -121,24 +117,23 @@ G4VPhysicalVolume *DetectorConstruction::Construct() {
   logicalInnerBPShell->SetSensitiveDetector(bpSD);
 
 #ifdef INSPECT_SOURCE
-  G4LogicalVolume *logicalSource = (new Box("Source", 0.5*cm,0.5*cm,0.5*cm))->GetLogicalVolume();
-  G4VPhysicalVolume *physSource = new G4PVPlacement(0,               // no rotation
-                                                   G4ThreeVector(-90*cm,0.,0.), // at (0,0,0)
-                                                   logicalSource,    // its logical volume
-                                                   "SourceEnvelop", // its name
-                                                   logicalWorld,               // its mother  volume
-                                                   false,           // no boolean operation
-                                                   0,               // copy number
-                                                   checkOverlaps);  // overlaps checking
-
+  G4LogicalVolume *logicalSource = (new Box("Source", 0.5 * cm, 0.5 * cm, 0.5 * cm))->GetLogicalVolume();
+  G4VPhysicalVolume *physSource = new G4PVPlacement(0,                               // no rotation
+                                                    G4ThreeVector(-90 * cm, 0., 0.), // at (0,0,0)
+                                                    logicalSource,                   // its logical volume
+                                                    "SourceEnvelop",                 // its name
+                                                    logicalWorld,                    // its mother  volume
+                                                    false,                           // no boolean operation
+                                                    0,                               // copy number
+                                                    checkOverlaps);                  // overlaps checking
 
   SD *sourceSD = new SD("RadioactiveSource");
   fSDMan->AddNewDetector(sourceSD);
   logicalSource->SetSensitiveDetector(sourceSD);
 #endif
 
-  std::cout <<"========== TOTAL WEIGHT of DETECTOR =============" << std::endl;
+  std::cout << "========== TOTAL WEIGHT of DETECTOR =============" << std::endl;
   std::cout << GetLogicalVolumeWeight(logicalWorld) << std::endl;
-  std::cout <<"=================================================" << std::endl;
+  std::cout << "=================================================" << std::endl;
   return physWorld;
 }

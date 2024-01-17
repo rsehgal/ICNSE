@@ -11,27 +11,25 @@
 class TH1F;
 class TTree;
 
-class Data{
+class Data {
 
-std::string fParticleName;
-std::string fProcessName;
-unsigned int fEvNo;
-double fEnergy;
+  std::string fParticleName;
+  std::string fProcessName;
+  unsigned int fEvNo;
+  double fEnergy;
 
-TH1F *fHist;
-TTree *fTree;
+  TH1F *fHist;
+  TTree *fTree;
 
 public:
-
-Data();
-Data(std::string particleName);
-~Data();
-unsigned int GetCount () const;
-void Fill(unsigned int evNo, std::string processName, double energy);
-void Fill(double energy);
-void Fill();
-void Write();
-
+  Data();
+  Data(std::string particleName);
+  ~Data();
+  unsigned int GetCount() const;
+  void Fill(unsigned int evNo, std::string processName, double energy);
+  void Fill(double energy);
+  void Fill();
+  void Write();
 };
 
 #endif
