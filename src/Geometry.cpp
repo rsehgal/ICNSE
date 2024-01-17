@@ -239,6 +239,7 @@ void GeometryProperties::SetMaterial(G4String logicalVolumeName, G4String materi
   // G4NistManager *nist = G4NistManager::Instance();
   Materials *nist = Materials::Instance();
   G4Material *solid_material = nist->FindOrBuildMaterial(material);
+  std::map<G4String, G4VisAttributes *> colorMap = nist->GetColorMap();
   if (solid_material)
     fMaterial = solid_material;
   else
@@ -249,10 +250,12 @@ void GeometryProperties::SetMaterial(G4String logicalVolumeName, G4String materi
     std::cout << "--------------------------------------" << std::endl;
     std::cout << vecOfLogicalVolumes[i]->GetName() << std::endl;
     // if (fLogicalVolume->GetName() == logicalVolumeName)
-    if (vecOfLogicalVolumes[i]->GetName() == logicalVolumeName)
+    if (vecOfLogicalVolumes[i]->GetName() == logicalVolumeName){
       vecOfLogicalVolumes[i]->SetMaterial(fMaterial);
+      vecOfLogicalVolumes[i]->SetVisAttributes(colorMap[material]);
+    }
 
-#ifdef ENABLE_OPTICAL_PHYSICS
+#ifdef ICNSE_ENABLE_OPTICAL_PHYSICS
     // std::cout << "Adding Reflective surfaces" << std::endl;
     G4SurfaceProperty *opticalMirror = Materials::Instance()->GetMirror("opticalMirror");
     // G4LogicalSkinSurface *skin1 =

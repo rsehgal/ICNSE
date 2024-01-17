@@ -51,7 +51,7 @@ G4bool SD::ProcessHits(G4Step *aStep, G4TouchableHistory *) {
 
   G4Track *track = aStep->GetTrack();
   G4String particleName = track->GetDefinition()->GetParticleName();
-#ifdef TRACK_ONLY_PRIMARY
+#ifdef ICNSE_TRACK_ONLY_PRIMARY
   bool isPrimary = (track->GetParentID() == 0);
   if (isPrimary) {
     G4TouchableHandle touchable = aStep->GetPreStepPoint()->GetTouchableHandle();

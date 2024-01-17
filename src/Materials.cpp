@@ -21,7 +21,7 @@ Materials *Materials::Instance() {
 }
 
 Materials::Materials() {
-#ifdef FILL_COLOUR
+#ifdef ICNSE_FILL_COLOUR
   fColor["G4_Pb"] = new G4VisAttributes(G4Colour(0.5, 0.5, 0, 1));
   fColor["ICNSE_BP"] = new G4VisAttributes(G4Colour(0.5, 1, 0.6, 1));
   fColor["ICNSE_HDPE"] = new G4VisAttributes(G4Colour(1, 0.5, 1, 1));

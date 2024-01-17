@@ -53,7 +53,7 @@ G4VPhysicalVolume *DetectorConstruction::Construct() {
                                                    0,               // copy number
                                                    checkOverlaps);  // overlaps checking
 
-#ifdef CYLINDRICAL_SHIELD
+#ifdef ICNSE_CYLINDRICAL_SHIELD
   double sphi = 0.;
   double dphi = 2 * M_PI;
   G4LogicalVolume *logicalHollowSpace =
@@ -116,7 +116,7 @@ G4VPhysicalVolume *DetectorConstruction::Construct() {
   fSDMan->AddNewDetector(bpSD);
   logicalInnerBPShell->SetSensitiveDetector(bpSD);
 
-#ifdef INSPECT_SOURCE
+#ifdef ICNSE_INSPECT_SOURCE
   G4LogicalVolume *logicalSource = (new Box("Source", 0.5 * cm, 0.5 * cm, 0.5 * cm))->GetLogicalVolume();
   G4VPhysicalVolume *physSource = new G4PVPlacement(0,                               // no rotation
                                                     G4ThreeVector(-90 * cm, 0., 0.), // at (0,0,0)
