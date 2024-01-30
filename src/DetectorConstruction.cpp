@@ -112,9 +112,11 @@ G4VPhysicalVolume *DetectorConstruction::Construct() {
   fSDMan->AddNewDetector(hollowSD);
   logicalHollowSpace->SetSensitiveDetector(hollowSD);
 
+  /*
   SD *bpSD = new SD("BoratedPolyEthylene");
   fSDMan->AddNewDetector(bpSD);
   logicalInnerBPShell->SetSensitiveDetector(bpSD);
+  */
 
 #ifdef ICNSE_INSPECT_SOURCE
   G4LogicalVolume *logicalSource = (new Box("Source", 0.5 * cm, 0.5 * cm, 0.5 * cm))->GetLogicalVolume();

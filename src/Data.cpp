@@ -14,6 +14,8 @@ Data::Data() {
   fTree = new TTree(fParticleName.c_str(), fParticleName.c_str());
   fTree->Branch("EventNum", &fEvNo);
   fTree->Branch("CreatorProcess", &fProcessName);
+  fTree->Branch("PhysicalVolumeName", &fPhysicalVolumeName);
+  fTree->Branch("Material", &fMaterial);
   fTree->Branch("Energy", &fEnergy);
 }
 
@@ -23,6 +25,8 @@ Data::Data(std::string particleName) : fParticleName(particleName) {
   fTree = new TTree(fParticleName.c_str(), fParticleName.c_str());
   fTree->Branch("EventNum", &fEvNo);
   fTree->Branch("CreatorProcess", &fProcessName);
+  fTree->Branch("PhysicalVolumeName", &fPhysicalVolumeName);
+  fTree->Branch("Material", &fMaterial);
   fTree->Branch("Energy", &fEnergy);
 }
 
@@ -33,6 +37,15 @@ unsigned int Data::GetCount() const { return fHist->GetEntries(); }
 void Data::Fill(unsigned int evNo, std::string processName, double energy) {
   fEvNo = evNo;
   fProcessName = processName;
+  fEnergy = energy;
+  Fill();
+}
+
+void Data::Fill(unsigned int evNo, std::string processName, double energy,std::string physicalVolumeName,std::string material) {
+  fEvNo = evNo;
+  fProcessName = processName;
+  fPhysicalVolumeName = physicalVolumeName;
+  fMaterial = material;
   fEnergy = energy;
   Fill();
 }

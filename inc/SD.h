@@ -49,6 +49,7 @@ public:
   void CheckAndCountParticle(G4String particleName);
   void CheckAndInsertParticleEnergy(G4String particleName, double energy);
   void CheckAndInsertParticleCreatorProcessAndEnergy(G4String particleName, std::string processName, double energy);
+  void CheckAndInsertParticleCreatorProcessAndEnergy(G4String particleName, std::string processName, double energy, std::string physicalVolumeName, std::string material);
   bool TrackFound(std::string trackId);
 
   // Required Getters

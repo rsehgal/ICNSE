@@ -33,6 +33,11 @@ if(ICNSE_FILL_COLOUR)
 add_definitions(-DICNSE_FILL_COLOUR)
 endif(ICNSE_FILL_COLOUR)
 
+option(AVOID_DUPLICATE_COUNT "Avoid duplicate count of a particle in sensitive volume, Default is OFF " OFF)
+if(AVOID_DUPLICATE_COUNT)
+add_definitions(-DAVOID_DUPLICATE_COUNT)
+endif(AVOID_DUPLICATE_COUNT)
+
 option(ICNSE_TRACK_ONLY_PRIMARY "Enabling OPTICAL Physics, Default is OFF " OFF)
 if(ICNSE_TRACK_ONLY_PRIMARY)
 add_definitions(-DICNSE_TRACK_ONLY_PRIMARY)
@@ -91,5 +96,14 @@ target_link_libraries(TestBoolean ${Geant4_LIBRARIES})
 
 add_executable(TestG4Units coreTest/TestG4Units.cpp)
 target_link_libraries(TestG4Units ${Geant4_LIBRARIES})
+
+add_executable(Plot_gamma Plots/Plot_gamma.cpp)
+target_link_libraries(Plot_gamma ${ROOT_LIBRARIES})
+
+add_executable(Plot_all Plots/Plot_all.cpp)
+target_link_libraries(Plot_all ${ROOT_LIBRARIES})
+
+add_executable(testplot Plots/testplot.cpp)
+target_link_libraries(testplot ${ROOT_LIBRARIES})
 
 #target_link_libraries(main ${Geant4_LIBRARIES} Tomo)

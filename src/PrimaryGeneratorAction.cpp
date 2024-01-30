@@ -45,7 +45,9 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event *event) {
     double charge = 0. * eplus;
     double energy = 0. * keV;
     // Creating Cs137 source
-    G4ParticleDefinition *ion = G4IonTable::GetIonTable()->GetIon(55, 137, energy);
+    // G4ParticleDefinition *ion = G4IonTable::GetIonTable()->GetIon(55, 137, energy);
+    // Creating Na22 source
+    G4ParticleDefinition *ion = G4IonTable::GetIonTable()->GetIon(11, 22, energy);
     fParticleGun->SetParticleDefinition(ion);
     fParticleGun->SetParticleCharge(charge);
   }

@@ -63,8 +63,11 @@ G4bool SD::ProcessHits(G4Step *aStep, G4TouchableHistory *) {
   }
 #else
   std::string trackId = std::to_string(track->GetTrackID()) + "_" + std::to_string(numOfEventsProcessed);
-  // std::cout << "TrackID : " << trackId << std::endl;
-  if (!TrackFound(trackId)) {
+
+#ifdef AVOID_DUPLICATE_COUNT
+  if (!TrackFound(trackId))
+#endif
+  {
     // std::cout <<"========== Inserting : "<< trackId <<" ==========" << std::endl;
     fVecOfTrackID.push_back(trackId);
     numOfParticlesReached++;
@@ -75,8 +78,13 @@ G4bool SD::ProcessHits(G4Step *aStep, G4TouchableHistory *) {
     if (creatorProcess) {
       // std::cout << "Process that creates gamma : " << creatorProcess->GetProcessName() << std::endl;
       processName = creatorProcess->GetProcessName();
-      CheckAndInsertParticleCreatorProcessAndEnergy(particleName, processName, energy);
+      std::string physicalVolumeName = track->GetOriginTouchable()->GetVolume()->GetName();
+      std::string physicalVolumeMaterial =
+          track->GetOriginTouchable()->GetVolume()->GetLogicalVolume()->GetMaterial()->GetName();
+      CheckAndInsertParticleCreatorProcessAndEnergy(particleName, processName, energy, physicalVolumeName,
+                                                    physicalVolumeMaterial);
     }
+    // track->SetTrackStatus(fStopAndKill);
   }
   /*
   else{
@@ -119,6 +127,22 @@ void SD::CheckAndInsertParticleCreatorProcessAndEnergy(G4String particleName, st
     fData[particleName]->Fill(numOfEventsProcessed, processName, energy);
   }
 }
+
+void SD::CheckAndInsertParticleCreatorProcessAndEnergy(G4String particleName, std::string processName, double energy,
+                                                       std::string physicalVolumeName,
+                                                       std::string physicalVolumeMaterial) {
+
+  if (fData.count(particleName)) {
+    // Particle found
+    fData[particleName]->Fill(numOfEventsProcessed, processName, energy, physicalVolumeName, physicalVolumeMaterial);
+  } else {
+    // Particle not found
+    fData[particleName] = new Data(particleName + "_" + fDetName);
+    // To Fill Tree
+    fData[particleName]->Fill(numOfEventsProcessed, processName, energy, physicalVolumeName, physicalVolumeMaterial);
+  }
+}
+
 void SD::CheckAndInsertParticleEnergy(G4String particleName, double energy) {
   if (fData.count(particleName)) {
     // Particle found
