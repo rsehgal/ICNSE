@@ -32,6 +32,8 @@
 #include "CLHEP/Random/RanecuEngine.h"
 #endif
 
+#include "TrackingAction.h"
+
 int main(int argc, char **argv) {
   G4UIExecutive *ui = 0;
   if (argc == 1) {
@@ -61,6 +63,8 @@ int main(int argc, char **argv) {
 #endif
 
   runManager->SetUserInitialization(new ActionInitialization());
+
+  //runManager->SetUserAction(new TrackingAction);
 
   G4VisManager *visManager = new G4VisExecutive;
   visManager->Initialize();

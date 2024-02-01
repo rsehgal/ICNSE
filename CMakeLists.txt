@@ -97,8 +97,10 @@ target_link_libraries(TestBoolean ${Geant4_LIBRARIES})
 add_executable(TestG4Units coreTest/TestG4Units.cpp)
 target_link_libraries(TestG4Units ${Geant4_LIBRARIES})
 
-add_executable(Plot_gamma Plots/Plot_gamma.cpp)
-target_link_libraries(Plot_gamma ${ROOT_LIBRARIES})
+add_executable(TestPtr coreTest/TestPtr.cpp)
+
+#add_executable(Plot_gamma Plots/Plot_gamma.cpp)
+#target_link_libraries(Plot_gamma ${ROOT_LIBRARIES})
 
 add_executable(Plot_all Plots/Plot_all.cpp)
 target_link_libraries(Plot_all ${ROOT_LIBRARIES})
