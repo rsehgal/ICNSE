@@ -27,20 +27,29 @@
 #include <G4LogicalSkinSurface.hh>
 #include <G4OpticalSurface.hh>
 #include <G4SDManager.hh>
-
-DetectorConstruction::DetectorConstruction() { fSDMan = G4SDManager::GetSDMpointer(); }
+//#include <G4ThreadLocal.hh>
+#include <G4Threading.hh>
+DetectorConstruction::DetectorConstruction()
+{
+   fSDMan = G4SDManager::GetSDMpointer();
+}
 
 DetectorConstruction::~DetectorConstruction() {}
 
-G4LogicalVolume *DetectorConstruction::GetLogicalWorld() const { return logicalWorld; }
+G4LogicalVolume *DetectorConstruction::GetLogicalWorld() const
+{
+  return logicalWorld;
+}
 
-G4VPhysicalVolume *DetectorConstruction::Construct() {
+G4VPhysicalVolume *DetectorConstruction::Construct()
+{
 
   // G4NistManager* nist = G4NistManager::Instance();
   //
   // World
   //
-  G4bool checkOverlaps = true;
+  vecOfSD.resize(G4Threading::G4GetNumberOfCores());
+  G4bool checkOverlaps   = true;
   G4double world_sizeXYZ = 200 * cm;
   logicalWorld =
       (new Box("World", 0.5 * world_sizeXYZ, 0.5 * world_sizeXYZ, 0.5 * world_sizeXYZ, "G4_AIR"))->GetLogicalVolume();
@@ -73,7 +82,8 @@ G4VPhysicalVolume *DetectorConstruction::Construct() {
   G4LogicalVolume *logicalOuterPSShell =
       (new CylindricalShell("OuterPSShell", 71 * cm, 75 * cm, 90 * cm, sphi, dphi, "ICNSE_PS"))->GetLogicalVolume();
 #else
-  G4LogicalVolume *logicalHollowSpace = (new Box("HollowSpace", 25 * cm, 25 * cm, 37.5 * cm))->GetLogicalVolume();
+  // G4LogicalVolume *logicalHollowSpace;
+  logicalHollowSpace = (new Box("HollowSpace", 25 * cm, 25 * cm, 37.5 * cm))->GetLogicalVolume();
   G4LogicalVolume *logicalInnerCopperShell =
       (new BoxShell("InnerCopperShell", 27 * cm, 27 * cm, 39.5 * cm, 2 * cm, "G4_Cu"))->GetLogicalVolume();
   G4LogicalVolume *logicalInnerPSShell =
@@ -108,9 +118,9 @@ G4VPhysicalVolume *DetectorConstruction::Construct() {
   new G4PVPlacement(0, G4ThreeVector(), logicalOuterPSShell, "OuterPSShell_Physical", logicalWorld, false, 0,
                     checkOverlaps);
 
-  SD *hollowSD = new SD("SensitiveHollowSpace");
+  /*SD *hollowSD = new SD("SensitiveHollowSpace");
   fSDMan->AddNewDetector(hollowSD);
-  logicalHollowSpace->SetSensitiveDetector(hollowSD);
+  logicalHollowSpace->SetSensitiveDetector(hollowSD);*/
 
   /*
   SD *bpSD = new SD("BoratedPolyEthylene");
@@ -120,7 +130,7 @@ G4VPhysicalVolume *DetectorConstruction::Construct() {
 
 #ifdef ICNSE_INSPECT_SOURCE
   G4LogicalVolume *logicalSource = (new Box("Source", 0.5 * cm, 0.5 * cm, 0.5 * cm))->GetLogicalVolume();
-  G4VPhysicalVolume *physSource = new G4PVPlacement(0,                               // no rotation
+  G4VPhysicalVolume *physSource  = new G4PVPlacement(0,                               // no rotation
                                                     G4ThreeVector(-90 * cm, 0., 0.), // at (0,0,0)
                                                     logicalSource,                   // its logical volume
                                                     "SourceEnvelop",                 // its name
@@ -138,4 +148,15 @@ G4VPhysicalVolume *DetectorConstruction::Construct() {
   std::cout << GetLogicalVolumeWeight(logicalWorld) << std::endl;
   std::cout << "=================================================" << std::endl;
   return physWorld;
+}
+
+void DetectorConstruction::ConstructSDandField()
+{
+  SD *hollowSD = new SD("SensitiveHollowSpace");
+  
+  G4int threadId = G4Threading::G4GetThreadId();
+  std::cout <<"AYUSH PUShing SD for thread : " << threadId << std::endl;
+  vecOfSD[threadId]=hollowSD;
+  fSDMan->AddNewDetector(hollowSD);
+  logicalHollowSpace->SetSensitiveDetector(hollowSD);
 }

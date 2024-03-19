@@ -53,15 +53,8 @@ int main(int argc, char **argv) {
   // TFile *fp = new TFile(outFileName,"RECREATE");
 
   //G4RunManager *runManager = new G4RunManager;
-
-//#undef G4MULTITHREADED
-#ifdef G4MULTITHREADED
   G4MTRunManager *runManager = new G4MTRunManager;
-  runManager->SetNumberOfThreads(4);
-#else  
-G4RunManager *runManager = new G4RunManager;
-#endif
-
+  runManager->SetNumberOfThreads(1);
   runManager->SetUserInitialization(new DetectorConstruction());
 
   G4VModularPhysicsList *physicsList = new Shielding; // QGSP_BERT_HP;//QBBC;
@@ -91,9 +84,8 @@ G4RunManager *runManager = new G4RunManager;
     G4String fileName = argv[1];
     G4String outFileName = fileName + ".root";
     
-    //int threadId = G4Threading::GetG4ThreadID() ;
-    //G4String outFileName = fileName +"_"+std::to_string(threadId)+ ".root";
-    fp = new TFile((outFileName).c_str(), "RECREATE");
+    int threadId = 9999;//G4Threading::GetG4ThreadID() ;
+    fp = new TFile((outFileName+std::to_string(threadId)).c_str(), "RECREATE");
     UImanager->ApplyCommand(command + fileName);
   } else {
     // interactive mode

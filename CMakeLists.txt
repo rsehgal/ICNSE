@@ -13,6 +13,8 @@ else()
     message(STATUS "The compiler ${CMAKE_CXX_COMPILER} has no C++14 support. Please use a different C++ compiler.")
 endif()
 
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=thread")
+
 option(ICNSE_CYLINDRICAL_SHIELD "Enabling CYLINDRICAL shape shielding layers, Default is Cuboidal" OFF)
 if(ICNSE_CYLINDRICAL_SHIELD)
 add_definitions(-DICNSE_CYLINDRICAL_SHIELD)
@@ -105,7 +107,7 @@ add_executable(TestPtr coreTest/TestPtr.cpp)
 add_executable(Plot_all Plots/Plot_all.cpp)
 target_link_libraries(Plot_all ${ROOT_LIBRARIES})
 
-add_executable(testplot Plots/testplot.cpp)
-target_link_libraries(testplot ${ROOT_LIBRARIES})
+#add_executable(testplot Plots/testplot.cpp)
+#target_link_libraries(testplot ${ROOT_LIBRARIES})
 
 #target_link_libraries(main ${Geant4_LIBRARIES} Tomo)

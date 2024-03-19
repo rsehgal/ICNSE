@@ -14,15 +14,19 @@ class G4VPhysicalVolume;
 class G4LogicalVolume;
 class G4SDManager;
 class G4Material;
+class SD;
 
 class DetectorConstruction : public G4VUserDetectorConstruction {
   // G4Material *fScintMaterial;
   G4LogicalVolume *logicalWorld;
+  G4LogicalVolume *logicalHollowSpace;
 
+  std::vector<SD*> vecOfSD;
 public:
   DetectorConstruction();
   ~DetectorConstruction();
   G4VPhysicalVolume *Construct();
+  void ConstructSDandField();
   G4LogicalVolume *GetLogicalWorld() const;
 
 public:

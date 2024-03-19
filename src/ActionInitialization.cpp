@@ -5,6 +5,7 @@
 */
 #include "ActionInitialization.h"
 #include "PrimaryGeneratorAction.h"
+#include "DetectorConstruction.h"
 #include "RunAction.h"
 #include <iostream>
 //#include "B1EventAction.hh"
@@ -15,13 +16,12 @@ ActionInitialization::ActionInitialization() : G4VUserActionInitialization() {}
 ActionInitialization::~ActionInitialization() {}
 
 void ActionInitialization::BuildForMaster() const {
-  //  SetUserAction(new RunAction);
+    SetUserAction(new RunAction);
 }
 
 void ActionInitialization::Build() const {
   SetUserAction(new PrimaryGeneratorAction);
   SetUserAction(new RunAction);
-
   //  B1EventAction* eventAction = new B1EventAction;
   //  SetUserAction(eventAction);
 
