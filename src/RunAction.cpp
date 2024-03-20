@@ -46,7 +46,13 @@ void RunAction::EndOfRunAction(const G4Run *run) {
 
   // WriteSD("BoratedPolyEthylene");
   // WriteSD("SensitiveHollowSpace");
-  for (unsigned int i = 0; i < SD::fVecOfSD.size(); i++) {
+  
+  /*for (unsigned int i = 0; i < SD::fVecOfSD.size(); i++) {
     WriteSD(SD::fVecOfSD[i]);
-  }
+  }*/
+
+  
+    DirectWrite();
+  
+
 }

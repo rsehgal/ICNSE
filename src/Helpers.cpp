@@ -16,8 +16,11 @@
 #include <iostream>
 #include <G4Threading.hh>
 #include "G4AutoLock.hh"
+#include "DetectorConstruction.h"
+#include <mutex>
 
-G4Mutex myMutex = G4MUTEX_INITIALIZER;
+//G4Mutex myMutex = G4MUTEX_INITIALIZER;
+std::mutex myMutex;
 
 void WriteSD(G4String sdName) {
   unsigned int nofEvents = G4RunManager::GetRunManager()->GetCurrentRun()->GetNumberOfEventToBeProcessed();
@@ -60,16 +63,31 @@ void PrintSummary(unsigned int numOfEvents) {
 }
 
 void Write(G4String sdName) {
+//G4AutoLock lock(&myMutex);
+  // for (const auto &pair : SD::fData) {
+  //std::cout << "RAMAN : " << G4Threading::G4GetThreadId() << std::endl;  
+  //SD *sd = static_cast<SD *>(G4SDManager::GetSDMpointer()->FindSensitiveDetector(sdName));
+  SD *sd =  DetectorConstruction::vecOfSD[G4Threading::G4GetThreadId()];
+  sd->GetFilePointer()->cd();
+  for (const auto &pair : sd->GetData()) {
+     std::cout <<"ThreadID : "<< G4Threading::G4GetThreadId()<< " : Inside WRITE : Particle : " << pair.first << " , Count : " << pair.second->GetCount() << std::endl;
+    pair.second->Write();
+  }
+  sd->GetFilePointer()->Close();
+}
+
+void DirectWrite() {
 G4AutoLock lock(&myMutex);
   // for (const auto &pair : SD::fData) {
-  std::cout << "RAMAN : " << G4Threading::G4GetThreadId() << std::endl;  
-SD *sd = static_cast<SD *>(G4SDManager::GetSDMpointer()->FindSensitiveDetector(sdName));
-/*  // sd->GetFilePointer()->cd();
+  //std::cout << "RAMAN : " << G4Threading::G4GetThreadId() << std::endl;  
+  //SD *sd = static_cast<SD *>(G4SDManager::GetSDMpointer()->FindSensitiveDetector(sdName));
+  SD *sd =  DetectorConstruction::vecOfSD[G4Threading::G4GetThreadId()];
+  sd->GetFilePointer()->cd();
   for (const auto &pair : sd->GetData()) {
-    // std::cout << "Inside WRITE : Particle : " << pair.first << " , Count : " << pair.second->GetCount() << std::endl;
+     std::cout <<"ThreadID : "<< G4Threading::G4GetThreadId()<< " : Inside WRITE : Particle : " << pair.first << " , Count : " << pair.second->GetCount() << std::endl;
     pair.second->Write();
-  }*/
-  // sd->GetFilePointer()->Close();
+  }
+  sd->GetFilePointer()->Close();
 }
 
 double GetLogicalVolumeWeight(G4LogicalVolume *logicalVolume) {

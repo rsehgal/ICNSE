@@ -29,6 +29,11 @@
 #include <G4SDManager.hh>
 //#include <G4ThreadLocal.hh>
 #include <G4Threading.hh>
+#include "SD.h"
+
+std::vector<SD*> DetectorConstruction::vecOfSD={};
+
+
 DetectorConstruction::DetectorConstruction()
 {
    fSDMan = G4SDManager::GetSDMpointer();

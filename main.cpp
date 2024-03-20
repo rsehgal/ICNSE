@@ -57,7 +57,7 @@ int main(int argc, char **argv) {
 //#undef G4MULTITHREADED
 #ifdef G4MULTITHREADED
   G4MTRunManager *runManager = new G4MTRunManager;
-  runManager->SetNumberOfThreads(4);
+  runManager->SetNumberOfThreads(2);
 #else  
 G4RunManager *runManager = new G4RunManager;
 #endif
@@ -84,7 +84,7 @@ G4RunManager *runManager = new G4RunManager;
 
   // Process macro or start UI session
   //
-  TFile *fp;
+  //TFile *fp;
   if (!ui) {
     // batch mode
     G4String command = "/control/execute ";
@@ -93,7 +93,7 @@ G4RunManager *runManager = new G4RunManager;
     
     //int threadId = G4Threading::GetG4ThreadID() ;
     //G4String outFileName = fileName +"_"+std::to_string(threadId)+ ".root";
-    fp = new TFile((outFileName).c_str(), "RECREATE");
+    //fp = new TFile((outFileName).c_str(), "RECREATE");
     UImanager->ApplyCommand(command + fileName);
   } else {
     // interactive mode
@@ -110,7 +110,7 @@ G4RunManager *runManager = new G4RunManager;
   // Output::instance()->Close();
   // anal->Close();
   // delete anal;
-  fp->Close();
+  //fp->Close();
   delete visManager;
   delete runManager;
   // fp->Close();

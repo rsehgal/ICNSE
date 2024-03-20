@@ -52,7 +52,7 @@ void Data::Fill(unsigned int evNo, std::string processName, double energy,std::s
 
 void Data::Fill(double energy) { fHist->Fill(energy); }
 
-void Data::Fill() { fTree->Fill(); }
+void Data::Fill() { Fill(fEnergy);fTree->Fill(); }
 
 void Data::Write() {
   // fHist->Write();

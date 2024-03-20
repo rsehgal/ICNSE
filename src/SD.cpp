@@ -23,6 +23,7 @@
 #include <TFile.h>
 #include <TH1F.h>
 #include <algorithm>
+#include <G4Threading.hh>
 
 /*unsigned int SD::numOfParticlesReached = 0;
 std::map<G4String,unsigned int> SD::fParticleCounter = {};
@@ -41,8 +42,9 @@ SD::SD(const G4String &name) : G4VSensitiveDetector(name), fDetName(name) {
   numOfParticlesReached = 0;
   numOfEventsProcessed = 0;
   fVecOfSD.push_back(fDetName);
-  G4String fileName = (name + ".root");
-  // fp = new TFile(fileName.c_str(),"RECREATE");
+  G4String fileName = (name+"_"+std::to_string(G4Threading::G4GetThreadId()) + ".root");
+  std::cout << "Filename for Thread : " << G4Threading::G4GetThreadId() <<" : " << fileName << std::endl;
+  fp = new TFile(fileName.c_str(),"RECREATE");
 }
 
 void SD::Initialize(G4HCofThisEvent *hce) { fVecOfTrackID.clear(); }

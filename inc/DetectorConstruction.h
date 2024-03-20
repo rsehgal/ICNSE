@@ -21,8 +21,8 @@ class DetectorConstruction : public G4VUserDetectorConstruction {
   G4LogicalVolume *logicalWorld;
   G4LogicalVolume *logicalHollowSpace;
 
-  std::vector<SD*> vecOfSD;
 public:
+  static std::vector<SD*> vecOfSD;
   DetectorConstruction();
   ~DetectorConstruction();
   G4VPhysicalVolume *Construct();
