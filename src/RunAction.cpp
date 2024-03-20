@@ -25,6 +25,7 @@ RunAction::~RunAction() {}
 G4Run *RunAction::GenerateRun() { return new Run; }
 
 void RunAction::BeginOfRunAction(const G4Run *) {
+  fEventNo = 0;
   G4RunManager::GetRunManager()->SetRandomNumberStore(false);
   const DetectorConstruction *userDetectorConstruction =
       static_cast<const DetectorConstruction *>(G4RunManager::GetRunManager()->GetUserDetectorConstruction());

@@ -8,10 +8,11 @@
 #include <TTree.h>
 #include <iostream>
 
-Data::Data() {
+Data::Data()
+{
   fParticleName = "geantino";
-  fHist = new TH1F(fParticleName.c_str(), fParticleName.c_str(), 1000, 0, 8000);
-  fTree = new TTree(fParticleName.c_str(), fParticleName.c_str());
+  fHist         = new TH1F(fParticleName.c_str(), fParticleName.c_str(), 1000, 0, 8000);
+  fTree         = new TTree(fParticleName.c_str(), fParticleName.c_str());
   fTree->Branch("EventNum", &fEvNo);
   fTree->Branch("CreatorProcess", &fProcessName);
   fTree->Branch("PhysicalVolumeName", &fPhysicalVolumeName);
@@ -19,7 +20,8 @@ Data::Data() {
   fTree->Branch("Energy", &fEnergy);
 }
 
-Data::Data(std::string particleName) : fParticleName(particleName) {
+Data::Data(std::string particleName) : fParticleName(particleName)
+{
 
   fHist = new TH1F(fParticleName.c_str(), fParticleName.c_str(), 1000, 0, 8000);
   fTree = new TTree(fParticleName.c_str(), fParticleName.c_str());
@@ -32,29 +34,44 @@ Data::Data(std::string particleName) : fParticleName(particleName) {
 
 Data::~Data() {}
 
-unsigned int Data::GetCount() const { return fHist->GetEntries(); }
+unsigned int Data::GetCount() const
+{
+  //return fHist->GetEntries();
+  return fTree->GetEntries();
+}
 
-void Data::Fill(unsigned int evNo, std::string processName, double energy) {
-  fEvNo = evNo;
+void Data::Fill(unsigned int evNo, std::string processName, double energy)
+{
+  fEvNo        = evNo;
   fProcessName = processName;
-  fEnergy = energy;
+  fEnergy      = energy;
   Fill();
 }
 
-void Data::Fill(unsigned int evNo, std::string processName, double energy,std::string physicalVolumeName,std::string material) {
-  fEvNo = evNo;
-  fProcessName = processName;
+void Data::Fill(unsigned int evNo, std::string processName, double energy, std::string physicalVolumeName,
+                std::string material)
+{
+  fEvNo               = evNo;
+  fProcessName        = processName;
   fPhysicalVolumeName = physicalVolumeName;
-  fMaterial = material;
-  fEnergy = energy;
+  fMaterial           = material;
+  fEnergy             = energy;
   Fill();
 }
 
-void Data::Fill(double energy) { fHist->Fill(energy); }
+void Data::Fill(double energy)
+{
+  fHist->Fill(energy);
+}
 
-void Data::Fill() { Fill(fEnergy);fTree->Fill(); }
+void Data::Fill()
+{
+  Fill(fEnergy);
+  fTree->Fill();
+}
 
-void Data::Write() {
+void Data::Write()
+{
   // fHist->Write();
   fTree->Write();
 }

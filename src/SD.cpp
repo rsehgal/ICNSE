@@ -24,7 +24,9 @@
 #include <TH1F.h>
 #include <algorithm>
 #include <G4Threading.hh>
-
+#include <G4RunManager.hh>
+#include "G4UserRunAction.hh"
+#include "RunAction.h"
 /*unsigned int SD::numOfParticlesReached = 0;
 std::map<G4String,unsigned int> SD::fParticleCounter = {};
 std::map<G4String,Data*> SD::fData = {};
@@ -142,6 +144,11 @@ void SD::CheckAndInsertParticleCreatorProcessAndEnergy(G4String particleName, st
     fData[particleName] = new Data(particleName + "_" + fDetName);
     // To Fill Tree
     fData[particleName]->Fill(numOfEventsProcessed, processName, energy, physicalVolumeName, physicalVolumeMaterial);
+    //const G4UserRunAction* constRunAction = G4RunManager::GetRunManager()->GetUserRunAction();
+    //RunAction *runAction = const_cast<RunAction*>(dynamic_cast<const RunAction*>(constRunAction));
+    //fData[particleName]->Fill(runAction->fEventNo, processName, energy, physicalVolumeName, physicalVolumeMaterial);
+    //fData[particleName]->Fill(G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID(), processName, energy, physicalVolumeName, physicalVolumeMaterial);
+   
   }
 }
 
@@ -158,6 +165,10 @@ void SD::CheckAndInsertParticleEnergy(G4String particleName, double energy) {
 }
 
 void SD::EndOfEvent(G4HCofThisEvent *) {
+  //RunAction *runAction = const_cast<RunAction*>(dynamic_cast<RunAction*>(G4RunManager::GetRunManager()->GetUserRunAction()));
+  const G4UserRunAction* constRunAction = G4RunManager::GetRunManager()->GetUserRunAction();
+  RunAction *runAction = const_cast<RunAction*>(dynamic_cast<const RunAction*>(constRunAction));
+  runAction->fEventNo++;
   numOfEventsProcessed++;
   if (!(numOfEventsProcessed % 100000) && numOfEventsProcessed != 0) {
     // std::cout << "Number of Events Processed : " << numOfEventsProcessed << std::endl;

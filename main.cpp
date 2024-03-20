@@ -54,8 +54,8 @@ int main(int argc, char **argv) {
 
   //G4RunManager *runManager = new G4RunManager;
 
-//#undef G4MULTITHREADED
-#ifdef G4MULTITHREADED
+
+#ifdef ICNSE_ENABLE_MULTITHREADING
   G4MTRunManager *runManager = new G4MTRunManager;
   runManager->SetNumberOfThreads(2);
 #else  

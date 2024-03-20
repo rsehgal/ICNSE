@@ -18,8 +18,10 @@ class TFile;
 class RunAction : public G4UserRunAction {
 
   TFile *fOutFile;
+  
 
 public:
+unsigned int fEventNo;
   // static ofstream *myfile;
   // static ofstream GetEnergyFile(){return myfile;}
   RunAction();
