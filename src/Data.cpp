@@ -4,74 +4,48 @@
 **	username : rsehgal
 */
 #include "Data.h"
-#include <TH1F.h>
 #include <TTree.h>
 #include <iostream>
+#include "RunAction.h"
+#include <G4RunManager.hh>
+#include <TFile.h>
 
 Data::Data()
 {
-  fParticleName = "geantino";
-  fHist         = new TH1F(fParticleName.c_str(), fParticleName.c_str(), 1000, 0, 8000);
-  fTree         = new TTree(fParticleName.c_str(), fParticleName.c_str());
+  fTree = new TTree("data", "data");
   fTree->Branch("EventNum", &fEvNo);
-  fTree->Branch("CreatorProcess", &fProcessName);
-  fTree->Branch("PhysicalVolumeName", &fPhysicalVolumeName);
-  fTree->Branch("Material", &fMaterial);
+  fTree->Branch("ScintId", &fScintId);
   fTree->Branch("Energy", &fEnergy);
 }
 
-Data::Data(std::string particleName) : fParticleName(particleName)
+Data::~Data()
 {
-
-  fHist = new TH1F(fParticleName.c_str(), fParticleName.c_str(), 1000, 0, 8000);
-  fTree = new TTree(fParticleName.c_str(), fParticleName.c_str());
-  fTree->Branch("EventNum", &fEvNo);
-  fTree->Branch("CreatorProcess", &fProcessName);
-  fTree->Branch("PhysicalVolumeName", &fPhysicalVolumeName);
-  fTree->Branch("Material", &fMaterial);
-  fTree->Branch("Energy", &fEnergy);
+  const G4UserRunAction *constRunAction = G4RunManager::GetRunManager()->GetUserRunAction();
+  RunAction *runAction                  = const_cast<RunAction *>(dynamic_cast<const RunAction *>(constRunAction));
+  //runAction->fOutFile->cd();
+  //Write();
 }
-
-Data::~Data() {}
 
 unsigned int Data::GetCount() const
 {
-  //return fHist->GetEntries();
+  // return fHist->GetEntries();
   return fTree->GetEntries();
 }
 
-void Data::Fill(unsigned int evNo, std::string processName, double energy)
+void Data::Fill(unsigned int evNo, unsigned int scintId, double energy)
 {
-  fEvNo        = evNo;
-  fProcessName = processName;
-  fEnergy      = energy;
+  fEvNo    = evNo;
+  fScintId = scintId;
+  fEnergy  = energy;
   Fill();
-}
-
-void Data::Fill(unsigned int evNo, std::string processName, double energy, std::string physicalVolumeName,
-                std::string material)
-{
-  fEvNo               = evNo;
-  fProcessName        = processName;
-  fPhysicalVolumeName = physicalVolumeName;
-  fMaterial           = material;
-  fEnergy             = energy;
-  Fill();
-}
-
-void Data::Fill(double energy)
-{
-  fHist->Fill(energy);
 }
 
 void Data::Fill()
 {
-  Fill(fEnergy);
   fTree->Fill();
 }
 
 void Data::Write()
 {
-  // fHist->Write();
   fTree->Write();
 }

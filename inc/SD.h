@@ -22,20 +22,10 @@ private:
   unsigned int numOfEventsProcessed;
 
 public:
-  // static
-  std::map<G4String, unsigned int> fParticleCounter;
-  // static
-  std::map<G4String, Data *> fData;
-  // static
-  unsigned int numOfParticlesReached;
-
-  static std::vector<G4String> fVecOfSD;
-
-  std::vector<std::string> fVecOfTrackID;
-
+  
+  std::map<unsigned int, double> fEventData;
   std::string fDetName;
-
-  TFile *fp;
+  Data *fData;
 
 public:
   // SD();
@@ -46,18 +36,7 @@ public:
   virtual void Initialize(G4HCofThisEvent *hitCollection);
   virtual G4bool ProcessHits(G4Step *step, G4TouchableHistory *history);
   virtual void EndOfEvent(G4HCofThisEvent *hitCollection);
-  void CheckAndCountParticle(G4String particleName);
-  void CheckAndInsertParticleEnergy(G4String particleName, double energy);
-  void CheckAndInsertParticleCreatorProcessAndEnergy(G4String particleName, std::string processName, double energy);
-  void CheckAndInsertParticleCreatorProcessAndEnergy(G4String particleName, std::string processName, double energy, std::string physicalVolumeName, std::string material);
-  bool TrackFound(std::string trackId);
-
-  // Required Getters
-  const unsigned int GetGetNumberOfParticlesReachedSD() const;
-  const std::map<G4String, Data *> GetData() const;
-  const std::map<G4String, unsigned int> GetParticleCounter() const;
-  TFile *GetFilePointer() const;
-  std::vector<G4String> GetVecOfSD() const;
+  
 };
 
 #endif

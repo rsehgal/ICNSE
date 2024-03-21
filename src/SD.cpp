@@ -27,160 +27,56 @@
 #include <G4RunManager.hh>
 #include "G4UserRunAction.hh"
 #include "RunAction.h"
-/*unsigned int SD::numOfParticlesReached = 0;
-std::map<G4String,unsigned int> SD::fParticleCounter = {};
-std::map<G4String,Data*> SD::fData = {};
-*/
-// int SD::numOfEventsProcessed = 0;
 
-std::vector<G4String> SD::fVecOfSD = {};
-
-SD::~SD() {
+SD::~SD()
+{
   // TODO Auto-generated destructor stub
-  // delete fp;
+ // delete fData;
 }
 
-SD::SD(const G4String &name) : G4VSensitiveDetector(name), fDetName(name) {
-  numOfParticlesReached = 0;
+SD::SD(const G4String &name) : G4VSensitiveDetector(name), fDetName(name)
+{
+  /*numOfParticlesReached = 0;
   numOfEventsProcessed = 0;
   fVecOfSD.push_back(fDetName);
   G4String fileName = (name+"_"+std::to_string(G4Threading::G4GetThreadId()) + ".root");
   std::cout << "Filename for Thread : " << G4Threading::G4GetThreadId() <<" : " << fileName << std::endl;
   fp = new TFile(fileName.c_str(),"RECREATE");
+  */
+  fData = new Data();
 }
 
-void SD::Initialize(G4HCofThisEvent *hce) { fVecOfTrackID.clear(); }
+void SD::Initialize(G4HCofThisEvent *hce)
+{
+  // clear the map
+  fEventData.clear();
+}
 
-G4bool SD::ProcessHits(G4Step *aStep, G4TouchableHistory *) {
-
-  G4Track *track = aStep->GetTrack();
-  G4String particleName = track->GetDefinition()->GetParticleName();
-#ifdef ICNSE_TRACK_ONLY_PRIMARY
-  bool isPrimary = (track->GetParentID() == 0);
-  if (isPrimary) {
-    G4TouchableHandle touchable = aStep->GetPreStepPoint()->GetTouchableHandle();
-    std::cout << "RAMAN Particle Reached : " << particleName << " : VolumeName : " << touchable->GetVolume()->GetName()
-              << std::endl;
-    numOfParticlesReached++;
-    track->SetTrackStatus(fStopAndKill);
-    CheckAndCountParticle(particleName);
+G4bool SD::ProcessHits(G4Step *aStep, G4TouchableHistory *)
+{
+  G4Track *track              = aStep->GetTrack();
+  G4String particleName       = track->GetDefinition()->GetParticleName();
+  double dE                   = aStep->GetTotalEnergyDeposit();
+  G4TouchableHandle touchable = track->GetTouchableHandle();
+  unsigned short copyNo       = touchable->GetCopyNumber();
+  if (fEventData.count(copyNo)) {
+    // copy number found
+    fEventData[copyNo] += dE;
+  } else {
+    // insert the energy for the new copy number
+    fEventData[copyNo] = dE;
   }
-#else
-  std::string trackId = std::to_string(track->GetTrackID()) + "_" + std::to_string(numOfEventsProcessed);
-
-#ifdef AVOID_DUPLICATE_COUNT
-  if (!TrackFound(trackId))
-#endif
-  {
-    // std::cout <<"========== Inserting : "<< trackId <<" ==========" << std::endl;
-    fVecOfTrackID.push_back(trackId);
-    numOfParticlesReached++;
-    CheckAndCountParticle(particleName);
-    double energy = track->GetKineticEnergy() / keV;
-    const G4VProcess *creatorProcess = track->GetCreatorProcess();
-    std::string processName = "";
-    if (creatorProcess) {
-      // std::cout << "Process that creates gamma : " << creatorProcess->GetProcessName() << std::endl;
-      processName = creatorProcess->GetProcessName();
-      std::string physicalVolumeName = track->GetOriginTouchable()->GetVolume()->GetName();
-      std::string physicalVolumeMaterial =
-          track->GetOriginTouchable()->GetVolume()->GetLogicalVolume()->GetMaterial()->GetName();
-      CheckAndInsertParticleCreatorProcessAndEnergy(particleName, processName, energy, physicalVolumeName,
-                                                    physicalVolumeMaterial);
-    }
-    // track->SetTrackStatus(fStopAndKill);
-  }
-  /*
-  else{
-    std::cout <<"========== NOT Inserting : "<< trackId <<" ==========" << std::endl;
-  }
-  */
-
-#endif
-
   return true;
 }
 
-bool SD::TrackFound(std::string trackId) {
-  bool found = false;
-  if (fVecOfTrackID.size()) {
-    found = (std::find(fVecOfTrackID.begin(), fVecOfTrackID.end(), trackId) != fVecOfTrackID.end());
-  }
-  return found;
-}
-
-void SD::CheckAndCountParticle(G4String particleName) {
-  if (fParticleCounter.count(particleName)) {
-    // Particle found
-    fParticleCounter[particleName]++;
-  } else {
-    // Particle not found
-    fParticleCounter[particleName] = 1;
-  }
-}
-
-void SD::CheckAndInsertParticleCreatorProcessAndEnergy(G4String particleName, std::string processName, double energy) {
-
-  if (fData.count(particleName)) {
-    // Particle found
-    fData[particleName]->Fill(numOfEventsProcessed, processName, energy);
-  } else {
-    // Particle not found
-    fData[particleName] = new Data(particleName + "_" + fDetName);
-    // To Fill Tree
-    fData[particleName]->Fill(numOfEventsProcessed, processName, energy);
-  }
-}
-
-void SD::CheckAndInsertParticleCreatorProcessAndEnergy(G4String particleName, std::string processName, double energy,
-                                                       std::string physicalVolumeName,
-                                                       std::string physicalVolumeMaterial) {
-
-  if (fData.count(particleName)) {
-    // Particle found
-    fData[particleName]->Fill(numOfEventsProcessed, processName, energy, physicalVolumeName, physicalVolumeMaterial);
-  } else {
-    // Particle not found
-    fData[particleName] = new Data(particleName + "_" + fDetName);
-    // To Fill Tree
-    fData[particleName]->Fill(numOfEventsProcessed, processName, energy, physicalVolumeName, physicalVolumeMaterial);
-    //const G4UserRunAction* constRunAction = G4RunManager::GetRunManager()->GetUserRunAction();
-    //RunAction *runAction = const_cast<RunAction*>(dynamic_cast<const RunAction*>(constRunAction));
-    //fData[particleName]->Fill(runAction->fEventNo, processName, energy, physicalVolumeName, physicalVolumeMaterial);
-    //fData[particleName]->Fill(G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID(), processName, energy, physicalVolumeName, physicalVolumeMaterial);
-   
-  }
-}
-
-void SD::CheckAndInsertParticleEnergy(G4String particleName, double energy) {
-  if (fData.count(particleName)) {
-    // Particle found
-    fData[particleName]->Fill(energy);
-  } else {
-    // Particle not found
-    fData[particleName] = new Data(particleName);
-    // To Fill Histogram
-    // fData[particleName]->Fill(energy);
-  }
-}
-
-void SD::EndOfEvent(G4HCofThisEvent *) {
-  //RunAction *runAction = const_cast<RunAction*>(dynamic_cast<RunAction*>(G4RunManager::GetRunManager()->GetUserRunAction()));
-  const G4UserRunAction* constRunAction = G4RunManager::GetRunManager()->GetUserRunAction();
-  RunAction *runAction = const_cast<RunAction*>(dynamic_cast<const RunAction*>(constRunAction));
+void SD::EndOfEvent(G4HCofThisEvent *)
+{
+  const G4UserRunAction *constRunAction = G4RunManager::GetRunManager()->GetUserRunAction();
+  RunAction *runAction                  = const_cast<RunAction *>(dynamic_cast<const RunAction *>(constRunAction));
   runAction->fEventNo++;
-  numOfEventsProcessed++;
-  if (!(numOfEventsProcessed % 100000) && numOfEventsProcessed != 0) {
-    // std::cout << "Number of Events Processed : " << numOfEventsProcessed << std::endl;
-    PrintSummary(fDetName, numOfEventsProcessed);
+  //std::cout <<"======== Event Number : " << runAction->fEventNo << "=========" << std::endl;
+  for (const auto &pair : fEventData) {
+    //std::cout << "CopyNumber : " << pair.first << " , Energy : " << pair.second << std::endl;
+    fData->Fill(runAction->fEventNo,pair.first,pair.second);
   }
 }
-
-// Required Getters
-const unsigned int SD::GetGetNumberOfParticlesReachedSD() const { return numOfParticlesReached; }
-const std::map<G4String, Data *> SD::GetData() const { return fData; }
-const std::map<G4String, unsigned int> SD::GetParticleCounter() const { return fParticleCounter; }
-
-TFile *SD::GetFilePointer() const { return fp; }
-
-std::vector<G4String> SD::GetVecOfSD() const { return fVecOfSD; }

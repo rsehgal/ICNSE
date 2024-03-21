@@ -21,13 +21,14 @@
 
 //G4Mutex myMutex = G4MUTEX_INITIALIZER;
 std::mutex myMutex;
-
+/*
 void WriteSD(G4String sdName) {
   unsigned int nofEvents = G4RunManager::GetRunManager()->GetCurrentRun()->GetNumberOfEventToBeProcessed();
   // PrintSummary(sdName,nofEvents);
   Write(sdName);
 }
-
+*/
+/*
 void PrintSummary(G4String sdName, unsigned int numOfEvents) {
   unsigned int totalNumOfEvents = G4RunManager::GetRunManager()->GetCurrentRun()->GetNumberOfEventToBeProcessed();
   std::cout << "================== SUMMARY ===========================================" << std::endl;
@@ -62,6 +63,7 @@ void PrintSummary(unsigned int numOfEvents) {
   std::cout << "======================================================================" << std::endl;
 }
 
+
 void Write(G4String sdName) {
 //G4AutoLock lock(&myMutex);
   // for (const auto &pair : SD::fData) {
@@ -89,7 +91,7 @@ G4AutoLock lock(&myMutex);
   }
   sd->GetFilePointer()->Close();
 }
-
+*/
 double GetLogicalVolumeWeight(G4LogicalVolume *logicalVolume) {
   // World volume should not be considered for weight calculation
   double weight = (logicalVolume->GetMaterial()->GetDensity() * logicalVolume->GetSolid()->GetCubicVolume()) / kg;

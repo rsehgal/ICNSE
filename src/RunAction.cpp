@@ -16,16 +16,23 @@
 #include "SD.h"
 #include <G4VUserDetectorConstruction.hh>
 #include <TFile.h>
+#include "Data.h"
+#include "G4SDManager.hh"
 using namespace std;
 
 RunAction::RunAction() : G4UserRunAction() {}
 
 RunAction::~RunAction() {}
 
-G4Run *RunAction::GenerateRun() { return new Run; }
+G4Run *RunAction::GenerateRun()
+{
+  return new Run;
+}
 
-void RunAction::BeginOfRunAction(const G4Run *) {
+void RunAction::BeginOfRunAction(const G4Run *)
+{
   fEventNo = 0;
+  fOutFile = new TFile("output.root", "RECREATE");
   G4RunManager::GetRunManager()->SetRandomNumberStore(false);
   const DetectorConstruction *userDetectorConstruction =
       static_cast<const DetectorConstruction *>(G4RunManager::GetRunManager()->GetUserDetectorConstruction());
@@ -35,25 +42,12 @@ void RunAction::BeginOfRunAction(const G4Run *) {
   std::cout << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" << std::endl;
 }
 
-void RunAction::EndOfRunAction(const G4Run *run) {
+void RunAction::EndOfRunAction(const G4Run *run)
+{
   G4int nofEvents = run->GetNumberOfEvent();
-  if (nofEvents == 0)
-    return;
-  /*PrintSummary("SensitiveHollowSpace",nofEvents);
+  if (nofEvents == 0) return;
   fOutFile->cd();
-  Write();
+  SD *sd = static_cast<SD *>(G4SDManager::GetSDMpointer()->FindSensitiveDetector("SensitiveScintillator"));
+  sd->fData->Write();
   fOutFile->Close();
-  */
-
-  // WriteSD("BoratedPolyEthylene");
-  // WriteSD("SensitiveHollowSpace");
-  
-  /*for (unsigned int i = 0; i < SD::fVecOfSD.size(); i++) {
-    WriteSD(SD::fVecOfSD[i]);
-  }*/
-
-  
-    DirectWrite();
-  
-
 }

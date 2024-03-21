@@ -31,6 +31,8 @@
 #include <G4Threading.hh>
 #include "SD.h"
 
+#define inch 2.54*cm
+
 std::vector<SD*> DetectorConstruction::vecOfSD={};
 
 
@@ -67,72 +69,53 @@ G4VPhysicalVolume *DetectorConstruction::Construct()
                                                    0,               // copy number
                                                    checkOverlaps);  // overlaps checking
 
-#ifdef ICNSE_CYLINDRICAL_SHIELD
-  double sphi = 0.;
-  double dphi = 2 * M_PI;
-  G4LogicalVolume *logicalHollowSpace =
-      (new CylindricalShell("HollowSpace", 0 * cm, 25 * cm, 90 * cm, sphi, dphi))->GetLogicalVolume();
-  G4LogicalVolume *logicalInnerCopperShell =
-      (new CylindricalShell("InnerCopperShell", 25 * cm, 27 * cm, 90 * cm, sphi, dphi, "G4_Cu"))->GetLogicalVolume();
-  G4LogicalVolume *logicalInnerPSShell =
-      (new CylindricalShell("InnerPSShell", 27 * cm, 31 * cm, 90 * cm, sphi, dphi, "ICNSE_PS"))->GetLogicalVolume();
-  G4LogicalVolume *logicalInnerHDPEShell =
-      (new CylindricalShell("InnerHDPEShell", 31 * cm, 41 * cm, 90 * cm, sphi, dphi, "ICNSE_HDPE"))->GetLogicalVolume();
-  G4LogicalVolume *logicalInnerPbShell =
-      (new CylindricalShell("InnerPbShell", 41 * cm, 51 * cm, 90 * cm, sphi, dphi, "G4_Pb"))->GetLogicalVolume();
-  G4LogicalVolume *logicalInnerBPShell =
-      (new CylindricalShell("InnerBPShell", 51 * cm, 61 * cm, 90 * cm, sphi, dphi, "ICNSE_BP"))->GetLogicalVolume();
-  G4LogicalVolume *logicalOuterHDPEShell =
-      (new CylindricalShell("OuterHDPEShell", 61 * cm, 71 * cm, 90 * cm, sphi, dphi, "ICNSE_HDPE"))->GetLogicalVolume();
-  G4LogicalVolume *logicalOuterPSShell =
-      (new CylindricalShell("OuterPSShell", 71 * cm, 75 * cm, 90 * cm, sphi, dphi, "ICNSE_PS"))->GetLogicalVolume();
-#else
-  // G4LogicalVolume *logicalHollowSpace;
-  logicalHollowSpace = (new Box("HollowSpace", 25 * cm, 25 * cm, 37.5 * cm))->GetLogicalVolume();
-  G4LogicalVolume *logicalInnerCopperShell =
-      (new BoxShell("InnerCopperShell", 27 * cm, 27 * cm, 39.5 * cm, 2 * cm, "G4_Cu"))->GetLogicalVolume();
-  G4LogicalVolume *logicalInnerPSShell =
-      (new BoxShell("InnerPSShell", 31 * cm, 31 * cm, 43.5 * cm, 4 * cm, "ICNSE_PS"))->GetLogicalVolume();
-  G4LogicalVolume *logicalInnerHDPEShell =
-      (new BoxShell("InnerHDPEShell", 41 * cm, 41 * cm, 53.5 * cm, 10 * cm, "ICNSE_HDPE"))->GetLogicalVolume();
-  G4LogicalVolume *logicalInnerPbShell =
-      (new BoxShell("InnerPbShell", 51 * cm, 51 * cm, 63.5 * cm, 10 * cm, "G4_Pb"))->GetLogicalVolume();
-  G4LogicalVolume *logicalInnerBPShell =
-      (new BoxShell("InnerBPShell", 61 * cm, 61 * cm, 73.5 * cm, 10 * cm, "ICNSE_BP"))->GetLogicalVolume();
-  G4LogicalVolume *logicalOuterHDPEShell =
-      (new BoxShell("OuterHDPEShell", 71 * cm, 71 * cm, 83.5 * cm, 10 * cm, "ICNSE_HDPE"))->GetLogicalVolume();
-  G4LogicalVolume *logicalOuterPSShell =
-      (new BoxShell("OuterPSShell", 75 * cm, 75 * cm, 87.5 * cm, 4 * cm, "ICNSE_PS"))->GetLogicalVolume();
 
-#endif
-  // Physical Placement
-  new G4PVPlacement(0, G4ThreeVector(), logicalHollowSpace, "HollowSpace_Physical", logicalWorld, false, 0,
-                    checkOverlaps);
-  new G4PVPlacement(0, G4ThreeVector(), logicalInnerCopperShell, "InnerCopperShell_Physical", logicalWorld, false, 0,
-                    checkOverlaps);
-  new G4PVPlacement(0, G4ThreeVector(), logicalInnerPSShell, "InnerPSShell_Physical", logicalWorld, false, 0,
-                    checkOverlaps);
-  new G4PVPlacement(0, G4ThreeVector(), logicalInnerHDPEShell, "InnerHDPEShell_Physical", logicalWorld, false, 0,
-                    checkOverlaps);
-  new G4PVPlacement(0, G4ThreeVector(), logicalInnerPbShell, "InnerPbShell_Physical", logicalWorld, false, 0,
-                    checkOverlaps);
-  new G4PVPlacement(0, G4ThreeVector(), logicalInnerBPShell, "InnerBPShell_Physical", logicalWorld, false, 0,
-                    checkOverlaps);
-  new G4PVPlacement(0, G4ThreeVector(), logicalOuterHDPEShell, "OuterHDPEShell_Physical", logicalWorld, false, 0,
-                    checkOverlaps);
-  new G4PVPlacement(0, G4ThreeVector(), logicalOuterPSShell, "OuterPSShell_Physical", logicalWorld, false, 0,
-                    checkOverlaps);
+  //All the required dimensions
 
-  /*SD *hollowSD = new SD("SensitiveHollowSpace");
-  fSDMan->AddNewDetector(hollowSD);
-  logicalHollowSpace->SetSensitiveDetector(hollowSD);*/
+  // Envelope holding the whole thing
+  double envelopeSizeX = 50.*inch;
+  double envelopeSizeY = envelopeSizeX;
+  double envelopeSizeZ = envelopeSizeX;
+  
+  // Target Dimensions
+  double targetSizeX = 5.*inch;
+  double targetSizeY = targetSizeX;
+  double targetSizeZ = targetSizeX;
 
-  /*
-  SD *bpSD = new SD("BoratedPolyEthylene");
-  fSDMan->AddNewDetector(bpSD);
-  logicalInnerBPShell->SetSensitiveDetector(bpSD);
-  */
+  // Scintillator Dimensions
+  double scintillatorDiameter = 5.*inch;
+  double scintillatorHeight = 5.*inch;
 
+  G4LogicalVolume *logicalEnvelope =
+      (new Box("Envelope", 0.5*envelopeSizeX , 0.5*envelopeSizeY, 0.5*envelopeSizeZ))->GetLogicalVolume();
+  G4LogicalVolume *logicalTarget =
+      (new Box("Target", 0.5*targetSizeX,0.5*targetSizeY,0.5*targetSizeZ, "G4_Fe"))->GetLogicalVolume();
+  G4LogicalVolume *logicalScintillator =
+      (new CylindricalShell("Scintillator", 0, 0.5*scintillatorDiameter,0.5*scintillatorHeight,0.,2*M_PI, "ICNSE_PS"))->GetLogicalVolume();
+
+  
+ G4RotationMatrix* rotation = new G4RotationMatrix();
+    rotation->rotateX(90 * deg);
+
+  new G4PVPlacement(0, G4ThreeVector(0.,0.,-0.5*envelopeSizeY+0.5*targetSizeZ), logicalTarget, "Target_Physical", logicalEnvelope, false, 0,
+                    checkOverlaps);
+  for(unsigned short i = 0 ; i < 10; i++){
+
+  new G4PVPlacement(rotation, G4ThreeVector(0., 0.5*envelopeSizeY-0.5*scintillatorHeight,
+  -0.5*envelopeSizeZ+(2*i+1)*0.5*scintillatorDiameter), logicalScintillator, "Scintillator_Physical_"+std::to_string(i), logicalEnvelope, false, i,
+                    checkOverlaps);
+  }
+
+  new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), logicalEnvelope, "Envelope_Physical", logicalWorld, false, 0,
+                    checkOverlaps);
+  
+  
+  SD *scintSD = new SD("SensitiveScintillator");
+  fSDMan->AddNewDetector(scintSD);
+  logicalScintillator->SetSensitiveDetector(scintSD);
+  
+
+  
 #ifdef ICNSE_INSPECT_SOURCE
   G4LogicalVolume *logicalSource = (new Box("Source", 0.5 * cm, 0.5 * cm, 0.5 * cm))->GetLogicalVolume();
   G4VPhysicalVolume *physSource  = new G4PVPlacement(0,                               // no rotation
@@ -157,6 +140,7 @@ G4VPhysicalVolume *DetectorConstruction::Construct()
 
 void DetectorConstruction::ConstructSDandField()
 {
+  /*
   SD *hollowSD = new SD("SensitiveHollowSpace");
   
   G4int threadId = G4Threading::G4GetThreadId();
@@ -164,4 +148,5 @@ void DetectorConstruction::ConstructSDandField()
   vecOfSD[threadId]=hollowSD;
   fSDMan->AddNewDetector(hollowSD);
   logicalHollowSpace->SetSensitiveDetector(hollowSD);
+  */
 }

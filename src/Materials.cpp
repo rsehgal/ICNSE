@@ -25,8 +25,9 @@ Materials::Materials() {
   fColor["G4_Pb"] = new G4VisAttributes(G4Colour(0.5, 0.5, 0, 1));
   fColor["ICNSE_BP"] = new G4VisAttributes(G4Colour(0.5, 1, 0.6, 1));
   fColor["ICNSE_HDPE"] = new G4VisAttributes(G4Colour(1, 0.5, 1, 1));
-  fColor["ICNSE_PS"] = new G4VisAttributes(G4Colour(0., 1, 0, 1));
+  fColor["ICNSE_PS"] = new G4VisAttributes(G4Colour(0., 1, 0, 0.5));
   fColor["G4_Cu"] = new G4VisAttributes(G4Colour(1., 1, 0, 01));
+  fColor["G4_Fe"] = new G4VisAttributes(G4Colour(1., 0.5, 0.5, 0.5));
 #endif
 
   CreateBoratedPolyethylene();
