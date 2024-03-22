@@ -89,7 +89,7 @@ G4VPhysicalVolume *DetectorConstruction::Construct()
   G4LogicalVolume *logicalTarget =
       (new Box("Target", 0.5 * targetSizeX, 0.5 * targetSizeY, 0.5 * targetSizeZ, "G4_Fe"))->GetLogicalVolume();
   G4LogicalVolume *logicalScintillator = (new CylindricalShell("Scintillator", 0, 0.5 * scintillatorDiameter,
-                                                               0.5 * scintillatorHeight, 0., 2 * M_PI, "ICNSE_PS"))
+                                                               0.5 * scintillatorHeight, 0., 2 * M_PI, "ICS_PS"))
                                              ->GetLogicalVolume();
 
   G4RotationMatrix *rotation = new G4RotationMatrix();
@@ -117,7 +117,7 @@ G4VPhysicalVolume *DetectorConstruction::Construct()
   fSDMan->AddNewDetector(scintSD);
   logicalScintillator->SetSensitiveDetector(scintSD);
 
-#ifdef ICNSE_INSPECT_SOURCE
+#ifdef ICS_INSPECT_SOURCE
   G4LogicalVolume *logicalSource = (new Box("Source", 0.5 * cm, 0.5 * cm, 0.5 * cm))->GetLogicalVolume();
   G4VPhysicalVolume *physSource  = new G4PVPlacement(0,                               // no rotation
                                                     G4ThreeVector(-90 * cm, 0., 0.), // at (0,0,0)

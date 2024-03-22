@@ -1,4 +1,4 @@
-# Macro file for ICNSE sheilding
+# Macro file for ICS sheilding
 # 
 # Can be run in batch, without graphic
 # or interactively: Idle> /control/execute icnse.mac
@@ -17,14 +17,14 @@
 
 #Material 
 #Default material set to G4_Galactic
-/ICNSE/setMaterial HollowSpace_Logical G4_AIR
-/ICNSE/setMaterial Shell0_Logical G4_Pb
-/ICNSE/setMaterial Shell1_Logical G4_Pb
-/ICNSE/setMaterial World_Logical G4_AIR
+/ICS/setMaterial HollowSpace_Logical G4_AIR
+/ICS/setMaterial Shell0_Logical G4_Pb
+/ICS/setMaterial Shell1_Logical G4_Pb
+/ICS/setMaterial World_Logical G4_AIR
 
 #Thickness can be changed as
-#/ICNSE/setInnerRadius Shell1_Logical 350
-#/ICNSE/setOuterRadius Shell1_Logical 550
+#/ICS/setInnerRadius Shell1_Logical 350
+#/ICS/setOuterRadius Shell1_Logical 550
 
 
 #Gun related Properties

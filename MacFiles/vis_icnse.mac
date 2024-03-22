@@ -106,18 +106,18 @@
 /vis/viewer/set/hiddenMarker true
 /vis/viewer/set/viewpointThetaPhi 120 150
 
-#/ICNSE/setInnerRadius Shell0_Logical 0.2
-#/ICNSE/setInnerRadius Shell1_Logical 2.9
+#/ICS/setInnerRadius Shell0_Logical 0.2
+#/ICS/setInnerRadius Shell1_Logical 2.9
 #/vis/geometry/set/colour Shell0_Logical 1 1 0 1 0.5 
 #/vis/geometry/set/colour Shell1_Logical 1 0 1 1 0.5
 #/vis/geometry/set/colour HollowSpace_Logical 1 153 102 0 0.5 
 #/vis/geometry/set/forceSolid Shell0_Logical 1 true
 #/vis/geometry/set/forceSolid Shell1_Logical 1 true
 #/vis/geometry/set/forceSolid HollowSpace_Logical 1 true
-#/ICNSE/setMaterial Shell0_Logical G4_Al
-#/ICNSE/setMaterial Shell1_Logical G4_Pb
-#/ICNSE/setMaterial HollowSpace_Logical G4_AIR
-#/ICNSE/setMaterial World_Logical G4_AIR
+#/ICS/setMaterial Shell0_Logical G4_Al
+#/ICS/setMaterial Shell1_Logical G4_Pb
+#/ICS/setMaterial HollowSpace_Logical G4_AIR
+#/ICS/setMaterial World_Logical G4_AIR
 
 /gun/particle mu-
 /gun/energy 1 GeV

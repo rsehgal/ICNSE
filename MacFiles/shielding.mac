@@ -1,15 +1,15 @@
 /run/initialize
 #/tracking/verbose 1
-#/ICNSE/setMaterial Shell1_Logical ICNSE_PS
-#/ICNSE/setOuterRadius OuterHDPEShell_Logical 660
-#/ICNSE/setInnerRadius OuterPSShell_Logical 660
-#/ICNSE/setOuterRadius OuterPSShell_Logical 700
+#/ICS/setMaterial Shell1_Logical ICS_PS
+#/ICS/setOuterRadius OuterHDPEShell_Logical 660
+#/ICS/setInnerRadius OuterPSShell_Logical 660
+#/ICS/setOuterRadius OuterPSShell_Logical 700
 
 
-/ICNSE/setMaterial OuterHDPEShell_Logical ICNSE_BP
-/ICNSE/setMaterial InnerBPShell_Logical ICNSE_HDPE
-/ICNSE/setMaterial InnerPbShell_Logical ICNSE_BP
-/ICNSE/setMaterial InnerHDPEShell_Logical G4_Pb
+/ICS/setMaterial OuterHDPEShell_Logical ICS_BP
+/ICS/setMaterial InnerBPShell_Logical ICS_HDPE
+/ICS/setMaterial InnerPbShell_Logical ICS_BP
+/ICS/setMaterial InnerHDPEShell_Logical G4_Pb
 
 /gun/particle GUN 
 /gun/energy ENER keV

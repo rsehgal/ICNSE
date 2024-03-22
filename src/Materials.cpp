@@ -21,13 +21,14 @@ Materials *Materials::Instance() {
 }
 
 Materials::Materials() {
-#ifdef ICNSE_FILL_COLOUR
+#ifdef ICS_FILL_COLOUR
   fColor["G4_Pb"] = new G4VisAttributes(G4Colour(0.5, 0.5, 0, 1));
-  fColor["ICNSE_BP"] = new G4VisAttributes(G4Colour(0.5, 1, 0.6, 1));
-  fColor["ICNSE_HDPE"] = new G4VisAttributes(G4Colour(1, 0.5, 1, 1));
-  fColor["ICNSE_PS"] = new G4VisAttributes(G4Colour(0., 1, 0, 0.5));
+  fColor["ICS_BP"] = new G4VisAttributes(G4Colour(0.5, 1, 0.6, 1));
+  fColor["ICS_HDPE"] = new G4VisAttributes(G4Colour(1, 0.5, 1, 1));
+  fColor["ICS_PS"] = new G4VisAttributes(G4Colour(0., 1, 0, 0.5));
   fColor["G4_Cu"] = new G4VisAttributes(G4Colour(1., 1, 0, 01));
   fColor["G4_Fe"] = new G4VisAttributes(G4Colour(1., 0.5, 0.5, 0.5));
+  fColor["G4_Galactic"] = new G4VisAttributes(G4Colour(1., 1., 1., 0.2));
 #endif
 
   CreateBoratedPolyethylene();
@@ -66,7 +67,7 @@ void Materials::CreateBoratedPolyethylene() {
   ** Very important line to add the newly created material to the map
   ** to be searched while creating the materials in detector constrution
   */
-  fMaterialMap["ICNSE_BP"] = fBP;
+  fMaterialMap["ICS_BP"] = fBP;
 }
 
 void Materials::CreateHighDensityPolyethylene() {
@@ -75,14 +76,14 @@ void Materials::CreateHighDensityPolyethylene() {
   G4NistManager *nistManager = G4NistManager::Instance();
   nistManager->BuildMaterialWithNewDensity("HighDensityPolyethylene", "G4_POLYETHYLENE", density);
   fHDPE = G4NistManager::Instance()->FindOrBuildMaterial("HighDensityPolyethylene");
-  fMaterialMap["ICNSE_HDPE"] = fHDPE;
+  fMaterialMap["ICS_HDPE"] = fHDPE;
 }
 
 void Materials::CreateScintillatorMaterial() {
   G4NistManager *nistManager = G4NistManager::Instance();
   G4Material *scintMaterial = nistManager->FindOrBuildMaterial("G4_PLASTIC_SC_VINYLTOLUENE");
   AttachScintillatorOpticalProperties(scintMaterial);
-  // fMaterialMap["ICNSE_PS"] = scintMaterial;
+  // fMaterialMap["ICS_PS"] = scintMaterial;
 }
 void Materials::AttachScintillatorOpticalProperties(G4Material *material) {
 
@@ -137,7 +138,7 @@ void Materials::AttachScintillatorOpticalProperties(G4Material *material) {
   ** to Material map, so that the optical Plastic scintillator can
   ** be directly utilized
   */
-  fMaterialMap["ICNSE_PS"] = material;
+  fMaterialMap["ICS_PS"] = material;
 }
 
 G4SurfaceProperty *Materials::GetMirror(G4String mirrorName) {

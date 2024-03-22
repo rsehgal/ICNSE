@@ -40,7 +40,7 @@ GeometryProperties::GeometryProperties(G4String material, G4VSolid *solid) {
 
 void GeometryProperties::DefineCommands() {
 
-  fGeometryMessenger = new G4GenericMessenger(this, "/ICNSE/", "Material Name");
+  fGeometryMessenger = new G4GenericMessenger(this, "/ICS/", "Material Name");
   fGeometryMessenger->DeclareMethod("setMaterial", &GeometryProperties::SetMaterial,
                                     "Set the material of your geometry");
   fGeometryMessenger->DeclareMethod("setInnerRadius", &GeometryProperties::SetInnerRadius,
@@ -255,7 +255,7 @@ void GeometryProperties::SetMaterial(G4String logicalVolumeName, G4String materi
       vecOfLogicalVolumes[i]->SetVisAttributes(colorMap[material]);
     }
 
-#ifdef ICNSE_ENABLE_OPTICAL_PHYSICS
+#ifdef ICS_ENABLE_OPTICAL_PHYSICS
     // std::cout << "Adding Reflective surfaces" << std::endl;
     G4SurfaceProperty *opticalMirror = Materials::Instance()->GetMirror("opticalMirror");
     // G4LogicalSkinSurface *skin1 =

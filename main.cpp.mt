@@ -28,7 +28,7 @@
 //#include "Physics.h"
 #include <unistd.h> //To get process id
 
-#ifdef ICNSE_USE_RANECU_RANDOM
+#ifdef ICS_USE_RANECU_RANDOM
 #include "CLHEP/Random/Random.h"
 #include "CLHEP/Random/RanecuEngine.h"
 #endif
@@ -41,7 +41,7 @@ int main(int argc, char **argv) {
     ui = new G4UIExecutive(argc, argv);
   }
 
-#ifdef ICNSE_USE_RANECU_RANDOM
+#ifdef ICS_USE_RANECU_RANDOM
   CLHEP::RanecuEngine *ranecuEngine = new CLHEP::RanecuEngine;
   CLHEP::HepRandom::setTheEngine(ranecuEngine);
   // CLHEP::HepRandom::setTheSeed(time(0));
@@ -60,7 +60,7 @@ int main(int argc, char **argv) {
   G4VModularPhysicsList *physicsList = new Shielding; // QGSP_BERT_HP;//QBBC;
   runManager->SetUserInitialization(physicsList);
 
-#ifdef ICNSE_ENABLE_OPTICAL_PHYSICS
+#ifdef ICS_ENABLE_OPTICAL_PHYSICS
   G4OpticalPhysics *opticalPhysics = new G4OpticalPhysics();
   physicsList->RegisterPhysics(opticalPhysics);
 #endif

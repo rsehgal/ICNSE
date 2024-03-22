@@ -106,8 +106,8 @@
 /vis/viewer/set/hiddenMarker true
 /vis/viewer/set/viewpointThetaPhi 120 150
 
-/ICNSE/setInnerRadius InnerShell_Logical 0.2
-/ICNSE/setInnerRadius TestShell_Logical 2.9
+/ICS/setInnerRadius InnerShell_Logical 0.2
+/ICS/setInnerRadius TestShell_Logical 2.9
 /vis/geometry/set/colour InnerShell_Logical 1 1 0 1 1
 /vis/geometry/set/colour TestShell_Logical 1 0 1 1 1
 /vis/geometry/set/forceSolid InnerShell_Logical 1 true
