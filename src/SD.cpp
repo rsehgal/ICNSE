@@ -31,7 +31,7 @@
 SD::~SD()
 {
   // TODO Auto-generated destructor stub
- // delete fData;
+  // delete fData;
 }
 
 SD::SD(const G4String &name) : G4VSensitiveDetector(name), fDetName(name)
@@ -59,12 +59,16 @@ G4bool SD::ProcessHits(G4Step *aStep, G4TouchableHistory *)
   double dE                   = aStep->GetTotalEnergyDeposit();
   G4TouchableHandle touchable = track->GetTouchableHandle();
   unsigned short copyNo       = touchable->GetCopyNumber();
-  if (fEventData.count(copyNo)) {
-    // copy number found
-    fEventData[copyNo] += dE;
-  } else {
-    // insert the energy for the new copy number
-    fEventData[copyNo] = dE;
+  // std::cout << "DE : " << dE << std::endl;
+  // Storing only if the energy deposited in a step is greater than 0
+  if (dE * 1000. > 0.) {
+    if (fEventData.count(copyNo)) {
+      // copy number found
+      fEventData[copyNo] += dE;
+    } else {
+      // insert the energy for the new copy number
+      fEventData[copyNo] = dE;
+    }
   }
   return true;
 }
@@ -74,9 +78,12 @@ void SD::EndOfEvent(G4HCofThisEvent *)
   const G4UserRunAction *constRunAction = G4RunManager::GetRunManager()->GetUserRunAction();
   RunAction *runAction                  = const_cast<RunAction *>(dynamic_cast<const RunAction *>(constRunAction));
   runAction->fEventNo++;
-  //std::cout <<"======== Event Number : " << runAction->fEventNo << "=========" << std::endl;
+
+  if (!(runAction->fEventNo % 100000) && runAction->fEventNo != 0)
+    std::cout << "Event Processed : " << runAction->fEventNo << std::endl;
+  // std::cout <<"======== Event Number : " << runAction->fEventNo << "=========" << std::endl;
   for (const auto &pair : fEventData) {
-    //std::cout << "CopyNumber : " << pair.first << " , Energy : " << pair.second << std::endl;
-    fData->Fill(runAction->fEventNo,pair.first,pair.second);
+    // std::cout << "CopyNumber : " << pair.first << " , Energy : " << pair.second << std::endl;
+    fData->Fill(runAction->fEventNo, pair.first, pair.second / keV);
   }
 }
