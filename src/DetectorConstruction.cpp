@@ -30,6 +30,8 @@
 //#include <G4ThreadLocal.hh>
 #include <G4Threading.hh>
 #include "SD.h"
+#include <cmath>
+#include <algorithm>
 
 #define inch 2.54 * cm
 
@@ -84,54 +86,66 @@ G4VPhysicalVolume *DetectorConstruction::Construct()
   double scintillatorDiameter = 5. * inch;
   double scintillatorHeight   = 5. * inch;
 
-  G4LogicalVolume *logicalEnvelope =
-      (new Box("Envelope", 0.1 * envelopeSizeX, 0.5 * envelopeSizeY, 0.5 * envelopeSizeZ))->GetLogicalVolume();
-  G4LogicalVolume *logicalTarget =
-      (new Box("Target", 0.5 * targetSizeX, 0.5 * targetSizeY, 0.5 * targetSizeZ, "G4_Fe"))->GetLogicalVolume();
-  G4LogicalVolume *logicalScintillator = (new CylindricalShell("Scintillator", 0, 0.5 * scintillatorDiameter,
-                                                               0.5 * scintillatorHeight, 0., 2 * M_PI, "ICS_PS"))
-                                             ->GetLogicalVolume();
+  double tubeRadius = 1.5*inch;
+  double tubeHalfHeight = 1.5*inch;
 
-  G4RotationMatrix *rotation = new G4RotationMatrix();
-  rotation->rotateX(90 * deg);
 
-  // Placing Target
-  new G4PVPlacement(0, G4ThreeVector(0., 0., -0.5 * envelopeSizeY + 0.5 * targetSizeZ), logicalTarget,
-                    "Target_Physical", logicalEnvelope, false, 0, checkOverlaps);
-  /*new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), logicalTarget, "Target_Physical", logicalEnvelope, false, 0,
-                    checkOverlaps);*/
-
+  unsigned short numOfLayers = 3;
+  G4LogicalVolume *logicalScintillator = (new CylindricalShell("NaI",0.,tubeRadius,tubeHalfHeight,0.,2*M_PI,"ICS_PS"))->GetLogicalVolume();
   // Placing Scintillators
-  for (unsigned short i = 0; i < 10; i++) {
-    new G4PVPlacement(rotation,
-                      G4ThreeVector(0., 0.5 * envelopeSizeY - 0.5 * scintillatorHeight,
-                                    -0.5 * envelopeSizeZ + (2 * i + 1) * 0.5 * scintillatorDiameter),
-                      logicalScintillator, "Scintillator_Physical_" + std::to_string(i), logicalEnvelope, false, i,
-                      checkOverlaps);
+  for ( int layer = numOfLayers-1; layer < numOfLayers; layer++) {
+    
+    for ( int q = -layer ; q < layer+1; q++){
+       short r1 = std::max(-layer,-q-layer);
+       short r2 = std::min(layer,-q+layer);
+       std::cout <<"== Layer : "<< layer << " : Q : " << q << " : === R1 : " << r1 << " : R2 : " << r2 <<" =====================" << std::endl;
+      for( short r = r1 ; r < r2+1 ; r++){
+        //std::cout <<"R : "<<r << std::endl;
+        //double x = tubeRadius*std::sqrt(3)*(q+r/2.);
+        //double y = tubeRadius *1.5*r;
+
+        double x = tubeRadius*2*(q+r/2.);
+        double y = tubeRadius*2/std::sqrt(3) *1.5*r;
+        //std::cout << "( " << x <<" , "<<y<<" )" << std::endl;
+        #if(0)
+        if(layer==0){
+          G4LogicalVolume *coloredlogicalScintillator = (new CylindricalShell("NaI",0.,tubeRadius,tubeHalfHeight,0.,2*M_PI))->GetLogicalVolume();
+        coloredlogicalScintillator->SetVisAttributes(Materials::Instance()->GetColorMap()["ICS_PS"]);
+        new G4PVPlacement(0, G4ThreeVector(x, y, 0.), coloredlogicalScintillator, "ColoredScintillator_Physical", logicalWorld, false, 0,
+                   checkOverlaps);
+        }
+        if(layer==1){
+          G4LogicalVolume  *coloredBPlogicalScintillator = (new CylindricalShell("NaI",0.,tubeRadius,tubeHalfHeight,0.,2*M_PI))->GetLogicalVolume();
+        coloredBPlogicalScintillator->SetVisAttributes(Materials::Instance()->GetColorMap()["G4_Fe"]);
+        new G4PVPlacement(0, G4ThreeVector(x, y, 0.), coloredBPlogicalScintillator, "ColoredFEScintillator_Physical", logicalWorld, false, 0,
+                   checkOverlaps);
+        }
+        if(layer==2){
+          G4LogicalVolume  *coloredPblogicalScintillator = (new CylindricalShell("NaI",0.,tubeRadius,tubeHalfHeight,0.,2*M_PI))->GetLogicalVolume();
+        coloredPblogicalScintillator->SetVisAttributes(Materials::Instance()->GetColorMap()["G4_Pb"]);
+        new G4PVPlacement(0, G4ThreeVector(x, y, 0.), coloredPblogicalScintillator, "ColoredPbScintillator_Physical", logicalWorld, false, 0,
+                   checkOverlaps);
+        }
+        else{
+          new G4PVPlacement(0, G4ThreeVector(x, y, 0.), logicalScintillator, "Scintillator_Physical", logicalWorld, false, 0,
+                   checkOverlaps);
+        }
+        #endif
+
+        new G4PVPlacement(0, G4ThreeVector(x, y, 0.), logicalScintillator, "Scintillator_Physical", logicalWorld, false, 0,
+                   checkOverlaps);
+      }
+    }
+    
   }
 
-  new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), logicalEnvelope, "Envelope_Physical", logicalWorld, false, 0,
-                    checkOverlaps);
+  //new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), logicalEnvelope, "Envelope_Physical", logicalWorld, false, 0,
+    //                checkOverlaps);
 
   SD *scintSD = new SD("SensitiveScintillator");
   fSDMan->AddNewDetector(scintSD);
-  logicalScintillator->SetSensitiveDetector(scintSD);
+  //logicalScintillator->SetSensitiveDetector(scintSD);
 
-#ifdef ICS_INSPECT_SOURCE
-  G4LogicalVolume *logicalSource = (new Box("Source", 0.5 * cm, 0.5 * cm, 0.5 * cm))->GetLogicalVolume();
-  G4VPhysicalVolume *physSource  = new G4PVPlacement(0,                               // no rotation
-                                                    G4ThreeVector(-90 * cm, 0., 0.), // at (0,0,0)
-                                                    logicalSource,                   // its logical volume
-                                                    "SourceEnvelop",                 // its name
-                                                    logicalWorld,                    // its mother  volume
-                                                    false,                           // no boolean operation
-                                                    0,                               // copy number
-                                                    checkOverlaps);                  // overlaps checking
-
-  SD *sourceSD = new SD("RadioactiveSource");
-  fSDMan->AddNewDetector(sourceSD);
-  logicalSource->SetSensitiveDetector(sourceSD);
-#endif
 
   std::cout << "========== TOTAL WEIGHT of DETECTOR =============" << std::endl;
   std::cout << GetLogicalVolumeWeight(logicalWorld) << std::endl;
