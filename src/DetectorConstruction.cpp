@@ -100,38 +100,10 @@ G4VPhysicalVolume *DetectorConstruction::Construct()
        short r2 = std::min(layer,-q+layer);
        std::cout <<"== Layer : "<< layer << " : Q : " << q << " : === R1 : " << r1 << " : R2 : " << r2 <<" =====================" << std::endl;
       for( short r = r1 ; r < r2+1 ; r++){
-        //std::cout <<"R : "<<r << std::endl;
-        //double x = tubeRadius*std::sqrt(3)*(q+r/2.);
-        //double y = tubeRadius *1.5*r;
-
+        
         double x = tubeRadius*2*(q+r/2.);
         double y = tubeRadius*2/std::sqrt(3) *1.5*r;
-        //std::cout << "( " << x <<" , "<<y<<" )" << std::endl;
-        #if(0)
-        if(layer==0){
-          G4LogicalVolume *coloredlogicalScintillator = (new CylindricalShell("NaI",0.,tubeRadius,tubeHalfHeight,0.,2*M_PI))->GetLogicalVolume();
-        coloredlogicalScintillator->SetVisAttributes(Materials::Instance()->GetColorMap()["ICS_PS"]);
-        new G4PVPlacement(0, G4ThreeVector(x, y, 0.), coloredlogicalScintillator, "ColoredScintillator_Physical", logicalWorld, false, 0,
-                   checkOverlaps);
-        }
-        if(layer==1){
-          G4LogicalVolume  *coloredBPlogicalScintillator = (new CylindricalShell("NaI",0.,tubeRadius,tubeHalfHeight,0.,2*M_PI))->GetLogicalVolume();
-        coloredBPlogicalScintillator->SetVisAttributes(Materials::Instance()->GetColorMap()["G4_Fe"]);
-        new G4PVPlacement(0, G4ThreeVector(x, y, 0.), coloredBPlogicalScintillator, "ColoredFEScintillator_Physical", logicalWorld, false, 0,
-                   checkOverlaps);
-        }
-        if(layer==2){
-          G4LogicalVolume  *coloredPblogicalScintillator = (new CylindricalShell("NaI",0.,tubeRadius,tubeHalfHeight,0.,2*M_PI))->GetLogicalVolume();
-        coloredPblogicalScintillator->SetVisAttributes(Materials::Instance()->GetColorMap()["G4_Pb"]);
-        new G4PVPlacement(0, G4ThreeVector(x, y, 0.), coloredPblogicalScintillator, "ColoredPbScintillator_Physical", logicalWorld, false, 0,
-                   checkOverlaps);
-        }
-        else{
-          new G4PVPlacement(0, G4ThreeVector(x, y, 0.), logicalScintillator, "Scintillator_Physical", logicalWorld, false, 0,
-                   checkOverlaps);
-        }
-        #endif
-
+        
         new G4PVPlacement(0, G4ThreeVector(x, y, 0.), logicalScintillator, "Scintillator_Physical", logicalWorld, false, 0,
                    checkOverlaps);
       }
@@ -139,12 +111,9 @@ G4VPhysicalVolume *DetectorConstruction::Construct()
     
   }
 
-  //new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), logicalEnvelope, "Envelope_Physical", logicalWorld, false, 0,
-    //                checkOverlaps);
-
   SD *scintSD = new SD("SensitiveScintillator");
   fSDMan->AddNewDetector(scintSD);
-  //logicalScintillator->SetSensitiveDetector(scintSD);
+  logicalScintillator->SetSensitiveDetector(scintSD);
 
 
   std::cout << "========== TOTAL WEIGHT of DETECTOR =============" << std::endl;
