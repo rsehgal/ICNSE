@@ -86,35 +86,51 @@ G4VPhysicalVolume *DetectorConstruction::Construct()
   double scintillatorDiameter = 5. * inch;
   double scintillatorHeight   = 5. * inch;
 
-  double tubeRadius = 1.5*inch;
-  double tubeHalfHeight = 1.5*inch;
+  double tubeRadius     = 1.5 * inch;
+  double tubeHalfHeight = 1.5 * inch;
 
+  double envelopHalfHeight = 4.5 * inch;
+
+  G4LogicalVolume *logicalEnvelop1 = (new CylindricalShell("LogicalEnvelope1", 8 * inch, 8 * inch + 10 * cm,
+                                                           envelopHalfHeight, 0., 2 * M_PI, "G4_Pb"))
+                                         ->GetLogicalVolume();
+  new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), logicalEnvelop1, "LogicalEnvelop1_Physical", logicalWorld, false, 0,
+                    checkOverlaps);
+
+
+G4LogicalVolume *logicalEnvelop2 = (new CylindricalShell("LogicalEnvelope2", 8 * inch+10*cm, 8 * inch + 20 * cm,
+                                                           envelopHalfHeight, 0., 2 * M_PI, "ICS_BP"))
+                                         ->GetLogicalVolume();
+  new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), logicalEnvelop2, "LogicalEnvelop2_Physical", logicalWorld, false, 0,
+                    checkOverlaps);
 
   unsigned short numOfLayers = 3;
-  G4LogicalVolume *logicalScintillator = (new CylindricalShell("NaI",0.,tubeRadius,tubeHalfHeight,0.,2*M_PI,"ICS_PS"))->GetLogicalVolume();
+  G4LogicalVolume *logicalScintillator =
+      (new CylindricalShell("NaI", 0., tubeRadius, tubeHalfHeight, 0., 2 * M_PI, "ICS_PS"))->GetLogicalVolume();
   // Placing Scintillators
-  for ( int layer = numOfLayers-1; layer < numOfLayers; layer++) {
-    
-    for ( int q = -layer ; q < layer+1; q++){
-       short r1 = std::max(-layer,-q-layer);
-       short r2 = std::min(layer,-q+layer);
-       std::cout <<"== Layer : "<< layer << " : Q : " << q << " : === R1 : " << r1 << " : R2 : " << r2 <<" =====================" << std::endl;
-      for( short r = r1 ; r < r2+1 ; r++){
-        
-        double x = tubeRadius*2*(q+r/2.);
-        double y = tubeRadius*2/std::sqrt(3) *1.5*r;
-        
-        new G4PVPlacement(0, G4ThreeVector(x, y, 0.), logicalScintillator, "Scintillator_Physical", logicalWorld, false, 0,
-                   checkOverlaps);
+  for (int layer = numOfLayers - 1; layer < numOfLayers; layer++) {
+
+    for (int q = -layer; q < layer + 1; q++) {
+      short r1 = std::max(-layer, -q - layer);
+      short r2 = std::min(layer, -q + layer);
+      std::cout << "== Layer : " << layer << " : Q : " << q << " : === R1 : " << r1 << " : R2 : " << r2
+                << " =====================" << std::endl;
+      for (short r = r1; r < r2 + 1; r++) {
+
+        double x = tubeRadius * 2 * (q + r / 2.);
+        double y = tubeRadius * 2 / std::sqrt(3) * 1.5 * r;
+
+        std::cout << "x : " << x <<" : y : " << y << std::endl;
+
+        new G4PVPlacement(0, G4ThreeVector(x, y, 0.), logicalScintillator, "Scintillator_Physical", logicalWorld, false,
+                          0, checkOverlaps);
       }
     }
-    
   }
 
   SD *scintSD = new SD("SensitiveScintillator");
   fSDMan->AddNewDetector(scintSD);
   logicalScintillator->SetSensitiveDetector(scintSD);
-
 
   std::cout << "========== TOTAL WEIGHT of DETECTOR =============" << std::endl;
   std::cout << GetLogicalVolumeWeight(logicalWorld) << std::endl;
